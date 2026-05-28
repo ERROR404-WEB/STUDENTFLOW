@@ -1,0 +1,32 @@
+<div class="login-container">
+    <div class="login-card">
+
+        <div class="login-left">
+            <img src="assets/login.png" alt="StudentFlow Login" />
+        </div>
+
+        <div class="login-right">
+            <h1>Welcome Back</h1>
+            <p class="subtitle">Login to your StudentFlow account</p>
+
+            <div class="form-field">
+                <label for="email">Email</label>
+                <input pInputText id="email" type="email" placeholder="Enter email" [(ngModel)]="email" />
+            </div>
+
+            <div class="form-field">
+                <label for="password">Password</label>
+                <input pInputText id="password" type="password" placeholder="Enter password" [(ngModel)]="password" />
+            </div>
+
+            <p-button label="Login" icon="pi pi-user" styleClass="login-btn" (onClick)="onLogin()">
+            </p-button>
+
+            <p class="signup-text">
+                New here?
+                <span (click)="onSignup()">Create Account</span>
+            </p>
+        </div>
+
+    </div>
+</div>

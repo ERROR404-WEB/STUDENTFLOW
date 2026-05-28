@@ -1,0 +1,28 @@
+<div class="applications-container">
+    <div class="page-header">
+        <div>
+            <h1>Applications</h1>
+            <p>View and manage all student applications</p>
+        </div>
+
+        <p-button label="Add Application" icon="pi pi-plus" styleClass="add-btn" (onClick)="addApplication()">
+        </p-button>
+    </div>
+
+    <div class="search-box">
+        <input pInputText type="text" placeholder="Search by name, email or phone..." [(ngModel)]="searchText" />
+    </div>
+
+    <div class="cards-grid">
+        <div class="application-card" *ngFor="let app of filteredApplications" (click)="openApplication(app.id)">
+
+            <img [src]="app.photo" alt="Student photo" />
+
+            <div class="card-content">
+                <h3>{{ app.studentName }}</h3>
+                <p>{{ app.studentEmail }}</p>
+                <p>{{ app.phoneNumber }}</p>
+            </div>
+        </div>
+    </div>
+</div>

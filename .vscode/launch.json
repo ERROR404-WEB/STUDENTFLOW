@@ -1,0 +1,58 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Backend (Nodemon Direct)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceFolder}/studentFlow-backend/node_modules/.bin/nodemon",
+      "args": ["server.js"],
+      "restart": true,
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/studentFlow-backend",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Debug Backend (Nodemon via NPM)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "restart": true,
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/studentFlow-backend",
+      "port": 9229,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Debug Backend (Direct Node)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/studentFlow-backend/server.js",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/studentFlow-backend",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Debug Frontend (Angular)",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "Start Frontend",
+      "url": "http://localhost:4200/",
+      "webRoot": "${workspaceFolder}/studentflow-frontend"
+    },
+    {
+      "name": "Attach to Frontend (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:4200/",
+      "webRoot": "${workspaceFolder}/studentflow-frontend"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Full Stack (Backend + Frontend)",
+      "configurations": ["Debug Backend (Nodemon Direct)", "Debug Frontend (Angular)"]
+    }
+  ]
+}

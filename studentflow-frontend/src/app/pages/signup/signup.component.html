@@ -1,0 +1,41 @@
+<div class="signup-container">
+    <div class="signup-card">
+
+        <div class="signup-left">
+            <img src="assets/signup.png" alt="StudentFlow Signup" />
+        </div>
+
+        <div class="signup-right">
+            <h1>Create Account</h1>
+
+            <p class="subtitle role-subtitle">
+                Join StudentFlow as an Agent
+            </p>
+
+            <div class="form-field">
+                <label for="name">Full Name</label>
+                <input pInputText id="name" type="text" placeholder="Enter full name" [(ngModel)]="name" />
+            </div>
+
+            <div class="form-field">
+                <label for="email">Email</label>
+                <input pInputText id="email" type="email" placeholder="Enter email" [(ngModel)]="email" />
+            </div>
+
+            <div class="form-field">
+                <label for="password">Password</label>
+                <input pInputText id="password" type="password" placeholder="Enter password" [(ngModel)]="password" />
+            </div>
+
+            <p-button label="Sign Up" icon="pi pi-user-plus" severity="success" styleClass="signup-btn"
+                (onClick)="signup()">
+            </p-button>
+
+            <p class="login-text">
+                Already have an account?
+                <a routerLink="/login">Login</a>
+            </p>
+        </div>
+
+    </div>
+</div>

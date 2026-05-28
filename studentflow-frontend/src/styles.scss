@@ -1,0 +1,59 @@
+@import "primeicons/primeicons.css";
+
+@layer tailwind-base, primeng, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #f4f8fb;
+  font-family: Arial, sans-serif;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+app-navbar {
+  flex-shrink: 0;
+}
+
+/* Make all routed components scrollable without Angular view encapsulation blocking */
+app-root > *:not(app-navbar):not(router-outlet) {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Global PrimeNG Button Customization */
+.p-button {
+  background: #0ea5e9 !important;
+  border-color: #0ea5e9 !important;
+  color: #ffffff !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.p-button:hover {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+}
+
+.p-button:active {
+  background: #0369a1 !important;
+  border-color: #0369a1 !important;
+  transform: scale(0.98) !important;
+}

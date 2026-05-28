@@ -1,0 +1,80 @@
+<div class="application-container">
+    <div class="application-card">
+        <h1>New Application</h1>
+        <p class="subtitle">Agent application submission form</p>
+
+        <div class="form-grid">
+            <div class="form-field">
+                <label>Student Name</label>
+                <input pInputText type="text" placeholder="Enter student name" [(ngModel)]="studentName" />
+            </div>
+
+            <div class="form-field">
+                <label>Student Email</label>
+                <input pInputText type="email" placeholder="Enter student email" [(ngModel)]="studentEmail" />
+            </div>
+
+            <div class="form-field">
+                <label>Phone Number</label>
+                <input pInputText type="text" placeholder="Enter phone number" [(ngModel)]="phoneNumber" />
+            </div>
+
+            <div class="form-field">
+                <label>Nationality</label>
+                <input pInputText type="text" placeholder="Enter nationality" [(ngModel)]="nationality" />
+            </div>
+
+            <div class="form-field">
+                <label>University Name</label>
+                <input pInputText type="text" placeholder="Enter university name" [(ngModel)]="universityName" />
+            </div>
+
+            <div class="form-field">
+                <label>Course Name</label>
+                <input pInputText type="text" placeholder="Enter course name" [(ngModel)]="courseName" />
+            </div>
+
+            <div class="form-field">
+                <label>Intake Month</label>
+                <p-select [options]="intakeMonths" [(ngModel)]="intakeMonth" optionLabel="label" optionValue="value"
+                    appendTo="body" styleClass="full-select">
+                </p-select>
+            </div>
+
+            <div class="form-field">
+                <label>Intake Year</label>
+                <input pInputText type="number" [(ngModel)]="intakeYear" />
+            </div>
+        </div>
+
+        <div class="documents-section">
+            <h3>Required Documents</h3>
+
+            <div class="upload-grid">
+                <div class="upload-box" *ngFor="let doc of requiredDocs">
+                    <label>{{ doc.label }}</label>
+
+                    <p-fileUpload mode="basic" [chooseLabel]="doc.key === 'photo' ? 'Upload Image' : 'Upload PDF'"
+                        [accept]="doc.key === 'photo' ? 'image/*' : 'application/pdf'" [maxFileSize]="5000000"
+                        [auto]="false" (onSelect)="onFileSelect($event, doc.key)">
+                    </p-fileUpload>
+
+                    <small *ngIf="uploadedDocs[doc.key] as file" [title]="file.name">
+                        Selected: {{ (file.name.length > 25)
+                        ? (file.name | slice:0:15) + '...' + (file.name | slice:-8)
+                        : file.name }}
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label>Agent Note</label>
+            <textarea pInputTextarea rows="4" placeholder="Add any note for internal team" [(ngModel)]="agentNote">
+      </textarea>
+        </div>
+
+        <p-button label="Submit Application" icon="pi pi-send" styleClass="submit-btn" (onClick)="submitApplication()">
+        </p-button>
+    </div>
+</div>

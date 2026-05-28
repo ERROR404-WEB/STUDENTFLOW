@@ -1,0 +1,102 @@
+.login-container {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+}
+
+.login-card {
+    width: 1000px;
+    max-width: 100%;
+    min-height: 560px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    background: #ffffff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+}
+
+.login-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+}
+
+.login-left img {
+    width: 100%;
+    max-width: 520px;
+    object-fit: contain;
+}
+
+.login-right {
+    padding: 56px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-right h1 {
+    margin: 0;
+    font-size: 34px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.subtitle {
+    margin: 10px 0 32px;
+    color: #64748b;
+    font-size: 16px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-field label {
+    font-weight: 600;
+    color: #334155;
+}
+
+.form-field input {
+    width: 100%;
+    height: 46px;
+}
+
+:host ::ng-deep .login-btn {
+    width: 100%;
+    height: 46px;
+}
+
+.signup-text {
+    margin-top: 22px;
+    text-align: center;
+    color: #64748b;
+}
+
+.signup-text span {
+    margin-left: 6px;
+    color: #00a884;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .login-card {
+        grid-template-columns: 1fr;
+    }
+
+    .login-left {
+        display: none;
+    }
+
+    .login-right {
+        padding: 36px 24px;
+    }
+}
