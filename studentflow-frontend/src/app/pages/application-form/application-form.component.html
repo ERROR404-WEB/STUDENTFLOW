@@ -25,13 +25,13 @@
             </div>
 
             <div class="form-field">
-                <label>University Name</label>
-                <input pInputText type="text" placeholder="Enter university name" [(ngModel)]="universityName" />
+                <label>Course Name</label>
+                <input pInputText type="text" placeholder="Enter course name" [(ngModel)]="courseName" />
             </div>
 
             <div class="form-field">
-                <label>Course Name</label>
-                <input pInputText type="text" placeholder="Enter course name" [(ngModel)]="courseName" />
+                <label>University Name</label>
+                <input pInputText type="text" placeholder="Enter university name" [(ngModel)]="universityName" />
             </div>
 
             <div class="form-field">
@@ -52,17 +52,14 @@
 
             <div class="upload-grid">
                 <div class="upload-box" *ngFor="let doc of requiredDocs">
-                    <label>{{ doc.label }}</label>
+                    <label>{{ doc.name }}</label>
 
-                    <p-fileUpload mode="basic" [chooseLabel]="doc.key === 'photo' ? 'Upload Image' : 'Upload PDF'"
-                        [accept]="doc.key === 'photo' ? 'image/*' : 'application/pdf'" [maxFileSize]="5000000"
+                    <p-fileUpload mode="basic" chooseLabel="Upload PDF" accept="application/pdf" [maxFileSize]="5000000"
                         [auto]="false" (onSelect)="onFileSelect($event, doc.key)">
                     </p-fileUpload>
 
-                    <small *ngIf="uploadedDocs[doc.key] as file" [title]="file.name">
-                        Selected: {{ (file.name.length > 25)
-                        ? (file.name | slice:0:15) + '...' + (file.name | slice:-8)
-                        : file.name }}
+                    <small *ngIf="uploadedDocs[doc.key]">
+                        Selected: {{ uploadedDocs[doc.key].name }}
                     </small>
                 </div>
             </div>

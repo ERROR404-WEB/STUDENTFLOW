@@ -41,7 +41,7 @@ export class SignupComponent {
     this.signupService.agentSignup(payload).subscribe({
       next: (response: any) => {
         if (response.user) {
-          this.router.navigate(['application-form']);
+          this.router.navigate(['applications']);
         }
       },
       error: (error) => {

@@ -32,7 +32,7 @@ app-navbar {
 }
 
 /* Make all routed components scrollable without Angular view encapsulation blocking */
-app-root > *:not(app-navbar):not(router-outlet) {
+app-root > *:not(app-navbar):not(router-outlet):not(p-toast) {
   flex: 1;
   overflow-y: auto;
   display: flex;

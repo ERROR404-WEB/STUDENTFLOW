@@ -5,7 +5,36 @@ const authMiddleware = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
-// Admin creates users manually 
+// List Users (Admin only)
+router.get("/", authMiddleware, async (req, res) => {
+  try {
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
+    const users = await User.find().select("-password");
+    res.json({ users });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get Single User (Admin only)
+router.get("/:id", authMiddleware, async (req, res) => {
+  try {
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Admin creates users manually
 router.post("/", authMiddleware, async (req, res) => {
   try {
     if (req.user.role !== "ADMIN") {
@@ -15,6 +44,8 @@ router.post("/", authMiddleware, async (req, res) => {
     const { name, email, password, role } = req.body;
 
     const allowedRoles = [
+      "ADMIN",
+      "AGENT",
       "COUNSELLOR",
       "QA_OFFICER",
       "ADMISSION_OFFICER",
@@ -44,12 +75,95 @@ router.post("/", authMiddleware, async (req, res) => {
     res.status(201).json({
       message: "User created successfully",
       user: {
-        id: user._id,
+        _id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        isActive: user.isActive
       }
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Update User (Admin only)
+router.patch("/:id", authMiddleware, async (req, res) => {
+  try {
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
+    const { name, email, role } = req.body;
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (role) user.role = role;
+
+    await user.save();
+    res.json({
+      message: "User updated successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isActive: user.isActive
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Toggle User Status (Admin only)
+router.patch("/:id/status", authMiddleware, async (req, res) => {
+  try {
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
+    const { isActive } = req.body;
+    if (isActive === undefined) {
+      return res.status(400).json({ message: "isActive state is required" });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.isActive = isActive;
+    await user.save();
+
+    res.json({
+      message: `User status updated successfully`,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isActive: user.isActive
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Delete User (Admin only)
+router.delete("/:id", authMiddleware, async (req, res) => {
+  try {
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

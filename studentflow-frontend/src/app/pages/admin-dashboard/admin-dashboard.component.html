@@ -1,0 +1,119 @@
+<div class="dashboard-container">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>Admin Dashboard</h1>
+
+            <p>
+                Overview of users, applications and workflow activity.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Stats -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card" *ngFor="let stat of stats">
+
+            <div class="stat-icon">
+
+                <i [class]="stat.icon"></i>
+
+            </div>
+
+            <div>
+
+                <h2>{{ stat.value }}</h2>
+
+                <p>{{ stat.title }}</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Middle Grid -->
+
+    <div class="middle-grid">
+
+        <!-- Applications by Stage -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h2>Applications by Stage</h2>
+
+            </div>
+
+            <div class="stage-row" *ngFor="let stage of stages">
+
+                <span>{{ stage.stage }}</span>
+
+                <span class="count">
+
+                    {{ stage.count }}
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- Quick Actions -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h2>Quick Actions</h2>
+
+            </div>
+
+            <div class="actions">
+
+                <button pButton label="Create User" icon="pi pi-user-plus" routerLink="/admin-users">
+                </button>
+
+                <button pButton severity="secondary" label="Manage Users" icon="pi pi-users" routerLink="/admin-users">
+                </button>
+
+                <button pButton severity="contrast" label="View Applications" icon="pi pi-file"
+                    routerLink="/applications">
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Activity -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h2>Recent Activity</h2>
+
+        </div>
+
+        <div class="activity-item" *ngFor="let activity of recentActivities">
+
+            <i class="pi pi-clock"></i>
+
+            <span>
+                {{ activity }}
+            </span>
+
+        </div>
+
+    </div>
+
+</div>

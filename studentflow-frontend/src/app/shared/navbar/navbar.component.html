@@ -1,8 +1,60 @@
 <nav class="navbar">
-    <button *ngIf="showBackButton" class="back-btn" (click)="goBack()">
-        <i class="pi pi-arrow-left"></i>
-    </button>
-    <div class="navbar-logo">
-        <img src="assets/logo-black.png" alt="Logo">
+
+    <div class="navbar-left">
+
+        <button *ngIf="showBackButton" class="back-btn" (click)="goBack()">
+
+            <i class="pi pi-arrow-left"></i>
+
+        </button>
+
+        <div class="navbar-logo">
+
+            <img src="assets/logo-black.png" alt="Logo">
+
+        </div>
+
     </div>
+
+    <div class="profile-wrapper">
+
+        <div class="user-profile" (click)="toggleProfileMenu()">
+
+            <div class="user-info">
+
+                <span class="user-name">
+                    {{ userName }}
+                </span>
+
+                <span class="user-role">
+                    {{ role.replaceAll('_', ' ') }}
+                </span>
+
+            </div>
+
+            <div class="avatar">
+
+                {{ getInitials() }}
+
+            </div>
+
+        </div>
+
+        <div class="overlay" *ngIf="showProfileMenu" (click)="showProfileMenu = false">
+        </div>
+
+        <div class="profile-menu" *ngIf="showProfileMenu">
+
+            <button class="menu-item logout" (click)="logout()">
+
+                <i class="pi pi-sign-out"></i>
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </div>
+
 </nav>

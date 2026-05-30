@@ -1,0 +1,243 @@
+<div class="review-container">
+
+    <div class="page-header">
+
+        <h1>Visa Review</h1>
+
+        <p>
+            Review visa documents and approve application for enrolment.
+        </p>
+
+    </div>
+
+    <!-- Workflow -->
+
+    <div class="card">
+
+        <div class="workflow">
+
+            <div class="step completed">
+                <div class="circle"><i class="pi pi-check"></i></div>
+                <span>NEW_APP</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step completed">
+                <div class="circle"><i class="pi pi-check"></i></div>
+                <span>QA_REVIEW</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step completed">
+                <div class="circle"><i class="pi pi-check"></i></div>
+                <span>APP_REVIEW</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step completed">
+                <div class="circle"><i class="pi pi-check"></i></div>
+                <span>DECISION</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step active">
+                <div class="circle">5</div>
+                <span>CAS_REVIEW</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Top Grid -->
+
+    <div class="top-grid">
+
+        <div class="card">
+
+            <h2>Student Information</h2>
+
+            <div class="info-row">
+                <label>Name</label>
+                <span>{{ student.studentName }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>Email</label>
+                <span>{{ student.studentEmail }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>University</label>
+                <span>{{ student.universityName }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>Course</label>
+                <span>{{ student.courseName }}</span>
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Visa Readiness</h2>
+
+            <div class="readiness warning">
+
+                Pending
+
+            </div>
+
+            <p>
+                Financial documents still require review.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Checklist -->
+
+    <div class="card">
+
+        <div class="section-header">
+
+            <h2>Visa Checklist</h2>
+
+        </div>
+
+        <div class="checklist-row" *ngFor="let item of visaChecklist">
+
+            <span>
+                {{ item.label }}
+            </span>
+
+            <span class="status" [class.complete]="item.completed" [class.pending]="!item.completed">
+
+                {{ item.completed ? 'Verified' : 'Pending' }}
+
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- Communication -->
+
+    <div class="card">
+
+        <h2>Communication</h2>
+
+        <p-tabs value="0">
+
+            <p-tablist>
+
+                <p-tab value="0">
+                    Public Conversation
+                </p-tab>
+
+                <p-tab value="1">
+                    Internal Notes
+                </p-tab>
+
+            </p-tablist>
+
+            <p-tabpanels>
+
+                <p-tabpanel value="0">
+
+                    <div class="messages">
+
+                        <div *ngFor="let note of publicNotes" class="message">
+
+                            <div class="message-header">
+
+                                <strong>
+                                    {{ note.addedByName }}
+                                </strong>
+
+                                <span>
+                                    {{ note.role }}
+                                </span>
+
+                            </div>
+
+                            {{ note.text }}
+
+                        </div>
+
+                    </div>
+
+                    <div class="message-input">
+
+                        <textarea pInputTextarea rows="3" [(ngModel)]="newPublicNote">
+                        </textarea>
+
+                        <button pButton label="Send" icon="pi pi-send" (click)="addPublicNote()">
+                        </button>
+
+                    </div>
+
+                </p-tabpanel>
+
+                <p-tabpanel value="1">
+
+                    <div class="messages">
+
+                        <div *ngFor="let note of internalNotes" class="message internal-message">
+
+                            <div class="message-header">
+
+                                <strong>
+                                    {{ note.addedByName }}
+                                </strong>
+
+                                <span>
+                                    {{ note.role }}
+                                </span>
+
+                            </div>
+
+                            {{ note.text }}
+
+                        </div>
+
+                    </div>
+
+                    <div class="message-input">
+
+                        <textarea pInputTextarea rows="3" [(ngModel)]="newInternalNote">
+                        </textarea>
+
+                        <button pButton severity="secondary" label="Save Note" icon="pi pi-send"
+                            (click)="addInternalNote()">
+                        </button>
+
+                    </div>
+
+                </p-tabpanel>
+
+            </p-tabpanels>
+
+        </p-tabs>
+
+    </div>
+
+    <!-- Actions -->
+
+    <div class="action-bar">
+
+        <button pButton severity="danger" label="Reject Application" icon="pi pi-times" (click)="rejectApplication()">
+        </button>
+
+        <button pButton label="Approve Visa Stage" icon="pi pi-check" (click)="approveVisaStage()">
+        </button>
+
+    </div>
+
+</div>

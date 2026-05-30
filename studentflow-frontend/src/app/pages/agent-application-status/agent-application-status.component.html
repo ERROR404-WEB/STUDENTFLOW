@@ -1,0 +1,163 @@
+<div class="status-page">
+
+    <!-- LEFT PANEL -->
+
+    <div class="left-panel">
+
+        <div class="card">
+
+            <h2>Student Details</h2>
+
+            <div class="detail">
+                <label>Name</label>
+                <span>{{student.studentName}}</span>
+            </div>
+
+            <div class="detail">
+                <label>Email</label>
+                <span>{{student.studentEmail}}</span>
+            </div>
+
+            <div class="detail">
+                <label>Phone</label>
+                <span>{{student.phoneNumber}}</span>
+            </div>
+
+            <div class="detail">
+                <label>Nationality</label>
+                <span>{{student.nationality}}</span>
+            </div>
+
+            <div class="detail">
+                <label>Course</label>
+                <span>{{student.courseName}}</span>
+            </div>
+
+            <div class="detail">
+                <label>University</label>
+                <span>{{student.universityName}}</span>
+            </div>
+
+            <div class="detail">
+                <label>Intake</label>
+                <span>{{student.intakeMonth}} {{student.intakeYear}}</span>
+            </div>
+
+            <hr>
+
+            <div class="documents-header">
+
+                <h3>Documents</h3>
+
+                <button pButton icon="pi pi-upload" label="Upload" (click)="uploadDocument()">
+                </button>
+
+            </div>
+
+            <div *ngFor="let doc of documents" class="document-row">
+
+                <div>
+
+                    <strong>{{doc.name}}</strong>
+
+                    <small [class.success]="doc.uploaded" [class.danger]="!doc.uploaded">
+
+                        {{
+                        doc.uploaded
+                        ? doc.fileName
+                        : 'Missing'
+                        }}
+
+                    </small>
+
+                </div>
+
+                <div class="doc-actions">
+
+                    <button pButton icon="pi pi-eye" text (click)="viewDocument(doc)">
+                    </button>
+
+                    <button pButton icon="pi pi-refresh" text (click)="replaceDocument(doc)">
+                    </button>
+
+                </div>
+
+            </div>
+
+            <button pButton label="Edit Application" icon="pi pi-pencil" class="edit-btn" (click)="editApplication()">
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+
+    <div class="right-panel">
+
+        <div class="card">
+
+            <h2>Application Status</h2>
+
+            <div class="progress-container">
+
+                <div *ngFor="let status of statuses; let i=index" class="progress-step"
+                    [class.active]="i <= currentIndex">
+
+                    <div class="circle">
+                        {{i + 1}}
+                    </div>
+
+                    <span>
+                        {{status}}
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="conversation">
+
+                <h3>Application Conversation</h3>
+
+                <div class="messages">
+
+                    <div *ngFor="let note of notes" class="message" [class.agent]="note.role === 'AGENT'">
+
+                        <div class="message-header">
+
+                            <strong>
+                                {{note.addedByName}}
+                            </strong>
+
+                            <span>
+                                {{note.role}}
+                            </span>
+
+                        </div>
+
+                        <div class="message-body">
+                            {{note.text}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="message-input">
+
+                    <textarea pInputTextarea rows="3" [(ngModel)]="newNote" placeholder="Type a message...">
+                    </textarea>
+
+                    <button pButton label="Send" icon="pi pi-send" (click)="addNote()">
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -34,8 +34,19 @@ export class LoginComponent {
     this.loginService.login(postData).subscribe({
       next: (res: any) => {
         if (res && res.token) {
+
           localStorage.setItem('token', res.token);
-          this.router.navigate(['application-form']);
+          localStorage.setItem('userId', res.user._id);
+          localStorage.setItem('role', res.user.role);
+          localStorage.setItem('name', res.user.name);
+
+          if (res.user.role === 'AGENT') {
+            this.router.navigate(['applications']);
+          } else if (res.user.role === 'ADMIN') {
+            this.router.navigate(['admin-dashboard']);
+          } else {
+            this.router.navigate(['internal-dashboard']);
+          }
         }
       },
       error: (err) => {

@@ -1,0 +1,233 @@
+<div class="review-container">
+
+    <div class="page-header">
+
+        <h1>Decision Review</h1>
+
+        <p>
+            View university decision and proceed with offer acceptance.
+        </p>
+
+    </div>
+
+    <!-- Workflow -->
+
+    <div class="card workflow-card">
+
+        <div class="workflow">
+
+            <div class="step completed">
+                <div class="circle">
+                    <i class="pi pi-check"></i>
+                </div>
+                <span>NEW_APP</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step completed">
+                <div class="circle">
+                    <i class="pi pi-check"></i>
+                </div>
+                <span>QA_REVIEW</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step completed">
+                <div class="circle">
+                    <i class="pi pi-check"></i>
+                </div>
+                <span>APP_REVIEW</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step active">
+                <div class="circle">4</div>
+                <span>DECISION</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Student -->
+
+    <div class="card">
+
+        <h2>Student Information</h2>
+
+        <div class="info-row">
+            <label>Name</label>
+            <span>{{ student.studentName }}</span>
+        </div>
+
+        <div class="info-row">
+            <label>Email</label>
+            <span>{{ student.studentEmail }}</span>
+        </div>
+
+        <div class="info-row">
+            <label>University</label>
+            <span>{{ student.universityName }}</span>
+        </div>
+
+        <div class="info-row">
+            <label>Course</label>
+            <span>{{ student.courseName }}</span>
+        </div>
+
+    </div>
+
+    <!-- Decision -->
+
+    <div class="card">
+
+        <h2>University Decision</h2>
+
+        <div class="decision-badge">
+
+            Conditional Offer
+
+        </div>
+
+        <h3>Conditions</h3>
+
+        <ul>
+            <li *ngFor="let condition of decision.conditions">
+                {{ condition }}
+            </li>
+        </ul>
+
+        <div class="offer-letter">
+
+            <strong>
+                Offer Letter
+            </strong>
+
+            <button pButton icon="pi pi-file-pdf" label="View Offer Letter" (click)="viewOfferLetter()">
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Communication -->
+
+    <div class="card">
+
+        <h2>Communication</h2>
+
+        <p-tabs value="0">
+
+            <p-tablist>
+
+                <p-tab value="0">
+                    Public Conversation
+                </p-tab>
+
+                <p-tab value="1">
+                    Internal Notes
+                </p-tab>
+
+            </p-tablist>
+
+            <p-tabpanels>
+
+                <!-- Public -->
+
+                <p-tabpanel value="0">
+
+                    <div class="messages">
+
+                        <div *ngFor="let note of publicNotes" class="message">
+
+                            <div class="message-header">
+
+                                <strong>
+                                    {{ note.addedByName }}
+                                </strong>
+
+                                <span>
+                                    {{ note.role }}
+                                </span>
+
+                            </div>
+
+                            {{ note.text }}
+
+                        </div>
+
+                    </div>
+
+                    <div class="message-input">
+
+                        <textarea pInputTextarea rows="3" [(ngModel)]="newPublicNote">
+                        </textarea>
+
+                        <button pButton icon="pi pi-send" label="Send" (click)="addPublicNote()">
+                        </button>
+
+                    </div>
+
+                </p-tabpanel>
+
+                <!-- Internal -->
+
+                <p-tabpanel value="1">
+
+                    <div class="messages">
+
+                        <div *ngFor="let note of internalNotes" class="message internal-message">
+
+                            <div class="message-header">
+
+                                <strong>
+                                    {{ note.addedByName }}
+                                </strong>
+
+                                <span>
+                                    {{ note.role }}
+                                </span>
+
+                            </div>
+
+                            {{ note.text }}
+
+                        </div>
+
+                    </div>
+
+                    <div class="message-input">
+
+                        <textarea pInputTextarea rows="3" [(ngModel)]="newInternalNote">
+                        </textarea>
+
+                        <button pButton icon="pi pi-send" label="Save Note" severity="secondary"
+                            (click)="addInternalNote()">
+                        </button>
+
+                    </div>
+
+                </p-tabpanel>
+
+            </p-tabpanels>
+
+        </p-tabs>
+
+    </div>
+
+    <!-- Actions -->
+
+    <div class="action-bar">
+
+        <button pButton severity="danger" icon="pi pi-times" label="Reject Application" (click)="rejectApplication()">
+        </button>
+
+        <button pButton icon="pi pi-arrow-right" label="Move To Deposit" (click)="moveToDeposit()">
+        </button>
+
+    </div>
+
+</div>

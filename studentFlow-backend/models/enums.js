@@ -33,3 +33,35 @@ export const ROLES = {
     "VISA_OFFICER": "VISA_OFFICER",
     "ENROLMENT_OFFICER": "ENROLMENT_OFFICER"
 }
+
+export const VALID_TRANSITIONS = {
+    "NEW_APP": ["QA_REVIEW", "CLOSED_LOST"],
+    "QA_REVIEW": ["APP_REVIEW", "APP_REJECTED", "CLOSED_LOST"],
+    "APP_REVIEW": ["DECISION", "APP_REJECTED", "CLOSED_LOST"],
+    "DECISION": ["DEPOSIT", "CLOSED_LOST"],
+    "DEPOSIT": ["CAS_REVIEW", "CLOSED_LOST"],
+    "CAS_REVIEW": ["ENROLMENT", "CLOSED_LOST"],
+    "ENROLMENT": ["COMPLETED", "CLOSED_LOST"],
+    "APP_REJECTED": [],
+    "CLOSED_LOST": [],
+    "COMPLETED": []
+}
+
+export const ROLE_TRANSITIONS = {
+    "QA_OFFICER": {
+        allowedFrom: ["NEW_APP", "QA_REVIEW"],
+        allowedTo: ["QA_REVIEW", "APP_REVIEW", "APP_REJECTED", "CLOSED_LOST"]
+    },
+    "ADMISSION_OFFICER": {
+        allowedFrom: ["APP_REVIEW", "DECISION"],
+        allowedTo: ["DECISION", "DEPOSIT", "APP_REJECTED", "CLOSED_LOST"]
+    },
+    "VISA_OFFICER": {
+        allowedFrom: ["DEPOSIT", "CAS_REVIEW"],
+        allowedTo: ["CAS_REVIEW", "ENROLMENT", "CLOSED_LOST"]
+    },
+    "ENROLMENT_OFFICER": {
+        allowedFrom: ["ENROLMENT"],
+        allowedTo: ["COMPLETED", "CLOSED_LOST"]
+    }
+}

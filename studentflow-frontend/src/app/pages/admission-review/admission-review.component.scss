@@ -1,0 +1,25 @@
+@import url("../qa-review/qa-review.component.scss");
+
+.review-container {
+    padding: 24px;
+    background: #f4f8fb;
+    min-height: 100vh;
+}
+
+.decision-box {
+    margin-top: 24px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.decision-box textarea {
+    width: 100%;
+}
+
+.verified {
+    display: block;
+    color: #16a34a;
+    margin-top: 4px;
+}

@@ -13,8 +13,8 @@
         <input pInputText type="text" placeholder="Search by name, email or phone..." [(ngModel)]="searchText" />
     </div>
 
-    <div class="cards-grid">
-        <div class="application-card" *ngFor="let app of filteredApplications" (click)="openApplication(app.id)">
+    <div class="cards-grid" *ngIf="filteredApplications && filteredApplications.length > 0; else noData">
+        <div class="application-card" *ngFor="let app of filteredApplications" (click)="openApplication(app._id)">
 
             <img [src]="app.photo" alt="Student photo" />
 
@@ -25,4 +25,16 @@
             </div>
         </div>
     </div>
+
+    <ng-template #noData>
+        <div class="no-data-container">
+            <i class="pi pi-inbox no-data-icon"></i>
+            <h3>No Applications Found</h3>
+            <p *ngIf="searchText">No applications match your search query "{{ searchText }}". Try searching for
+                something else.</p>
+            <p *ngIf="!searchText">There are no student applications submitted yet. Click the button below to add your
+                first application.</p>
+            <p-button label="Add Application" icon="pi pi-plus" (onClick)="addApplication()"></p-button>
+        </div>
+    </ng-template>
 </div>

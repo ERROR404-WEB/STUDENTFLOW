@@ -1,0 +1,130 @@
+.review-container {
+    padding: 24px;
+    background: #f4f8fb;
+    min-height: 100vh;
+}
+
+.card {
+    background: white;
+    padding: 24px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+}
+
+.page-header {
+    margin-bottom: 20px;
+}
+
+.workflow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step.completed .circle {
+    background: #16a34a;
+    color: white;
+}
+
+.step.active .circle {
+    background: #0ea5e9;
+    color: white;
+}
+
+.line {
+    width: 120px;
+    height: 2px;
+    background: #cbd5e1;
+    margin: 0 15px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid #ececec;
+}
+
+.decision-badge {
+    display: inline-block;
+    background: #fef3c7;
+    color: #92400e;
+    padding: 10px 18px;
+    border-radius: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.offer-letter {
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.messages {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.message {
+    background: #f8fafc;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.internal-message {
+    background: #fff7ed;
+    border-left: 4px solid #f59e0b;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.message-input {
+    display: flex;
+    gap: 12px;
+}
+
+.message-input textarea {
+    flex: 1;
+}
+
+.action-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+@media(max-width: 900px) {
+
+    .message-input {
+        flex-direction: column;
+    }
+
+    .action-bar {
+        flex-direction: column;
+    }
+}

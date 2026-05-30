@@ -7,6 +7,10 @@ import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { FileUploadModule } from 'primeng/fileupload';
+import { ApplicationFormService } from './application-form.service';
+import { Router } from '@angular/router';
+
+type UploadedDocs = Record<string, File>;
 
 @Component({
   selector: 'app-application-form',
@@ -41,15 +45,21 @@ export class ApplicationFormComponent {
   ];
 
   requiredDocs = [
-    { key: 'photo', label: 'Student Photo' },
-    { key: 'passport', label: 'Passport' },
-    { key: 'academic', label: 'Academic Documents' },
-    { key: 'englishTest', label: 'English Test / IELTS' },
-    { key: 'sop', label: 'Statement of Purpose' },
-    { key: 'cv', label: 'CV / Resume' }
+    { key: 'passport', name: 'Passport' },
+    { key: 'academic', name: 'Academic Documents' },
+    { key: 'englishTest', name: 'English Test / IELTS' },
+    { key: 'sop', name: 'Statement of Purpose' },
+    { key: 'cv', name: 'CV / Resume' }
   ];
 
-  uploadedDocs: Record<string, File> = {};
+  uploadedDocs: UploadedDocs = {};
+
+  constructor(
+    private applicationService: ApplicationFormService,
+    private router: Router
+  ) {
+
+  }
 
   onFileSelect(event: any, key: string) {
     const file = event.files?.[0];
@@ -57,6 +67,23 @@ export class ApplicationFormComponent {
     if (file) {
       this.uploadedDocs[key] = file;
     }
+  }
+
+  getDocumentsForPayload() {
+    return this.requiredDocs
+      .filter((doc) => !!this.uploadedDocs[doc.key])
+      .map((doc) => {
+        const file = this.uploadedDocs[doc.key];
+
+        return {
+          key: doc.key,
+          name: doc.name,
+          fileName: file.name,
+          mimeType: file.type,
+          uploaded: true,
+          uploadedAt: new Date()
+        };
+      });
   }
 
   submitApplication() {
@@ -70,9 +97,13 @@ export class ApplicationFormComponent {
       intakeMonth: this.intakeMonth,
       intakeYear: this.intakeYear,
       agentNote: this.agentNote,
-      documents: Object.keys(this.uploadedDocs)
+      documents: this.getDocumentsForPayload()
     };
 
-    console.log('Application Payload:', payload);
+    this.applicationService.submitApplication(payload).subscribe({
+      next: (res: any) => {
+        this.router.navigate(['/applications']);
+      }
+    })
   }
 }

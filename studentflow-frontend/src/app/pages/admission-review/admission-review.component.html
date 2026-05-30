@@ -1,0 +1,286 @@
+<div class="review-container">
+
+    <div class="page-header">
+
+        <h1>Admission Review</h1>
+
+        <p>
+            Evaluate application and recommend admission decision.
+        </p>
+
+    </div>
+
+    <!-- Workflow -->
+
+    <div class="card workflow-card">
+
+        <div class="workflow">
+
+            <div class="step completed">
+                <div class="circle">
+                    <i class="pi pi-check"></i>
+                </div>
+                <span>NEW_APP</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step completed">
+                <div class="circle">
+                    <i class="pi pi-check"></i>
+                </div>
+                <span>QA_REVIEW</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step active">
+                <div class="circle">3</div>
+                <span>APP_REVIEW</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step">
+                <div class="circle">4</div>
+                <span>DECISION</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="top-grid">
+
+        <!-- Student -->
+
+        <div class="card">
+
+            <h2>Student Information</h2>
+
+            <div class="info-row">
+                <label>Name</label>
+                <span>{{ student.studentName }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>Email</label>
+                <span>{{ student.studentEmail }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>University</label>
+                <span>{{ student.universityName }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>Course</label>
+                <span>{{ student.courseName }}</span>
+            </div>
+
+        </div>
+
+        <!-- AI -->
+
+        <div class="card">
+
+            <h2>AI Assessment</h2>
+
+            <div class="assessment-item">
+
+                <span>Readiness</span>
+
+                <div class="badge warning">
+                    {{ aiReview.readiness }}
+                </div>
+
+            </div>
+
+            <div class="assessment-group">
+
+                <h4>Missing Documents</h4>
+
+                <div class="badge danger" *ngFor="let item of aiReview.missingDocuments">
+
+                    {{ item }}
+
+                </div>
+
+            </div>
+
+            <div class="assessment-group">
+
+                <h4>Risks</h4>
+
+                <div class="risk-item" *ngFor="let risk of aiReview.risks">
+
+                    ⚠ {{ risk }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Documents -->
+
+    <div class="card">
+
+        <div class="section-header">
+
+            <h2>Verified Documents</h2>
+
+            <span>{{ documents.length }} Documents</span>
+
+        </div>
+
+        <div class="document-row" *ngFor="let doc of documents">
+
+            <div>
+
+                <strong>{{ doc.name }}</strong>
+
+                <small class="verified">
+                    Verified by QA
+                </small>
+
+            </div>
+
+            <button pButton icon="pi pi-eye" label="View" text (click)="viewDocument(doc)">
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Decision -->
+
+    <div class="card">
+
+        <h2>Admission Recommendation</h2>
+
+        <p-selectButton [options]="decisionOptions" [(ngModel)]="selectedDecision" optionLabel="label"
+            optionValue="value">
+        </p-selectButton>
+
+        <div class="decision-box">
+
+            <label>
+                Review Notes
+            </label>
+
+            <textarea pInputTextarea rows="4" [(ngModel)]="decisionReason" placeholder="Enter admission review notes">
+        </textarea>
+
+        </div>
+
+        <div *ngIf="selectedDecision === 'CONDITIONAL'" class="decision-box">
+
+            <label>
+                Offer Conditions
+            </label>
+
+            <textarea pInputTextarea rows="4" [(ngModel)]="offerConditions"
+                placeholder="Example: Submit final transcripts, updated IELTS score, etc.">
+        </textarea>
+
+        </div>
+
+    </div>
+
+
+    <!-- Communication -->
+
+    <div class="card">
+
+        <h2>Communication</h2>
+
+        <p-tabs value="0">
+
+            <p-tablist>
+
+                <p-tab value="0">
+                    Public Conversation
+                </p-tab>
+
+                <p-tab value="1">
+                    Internal Notes
+                </p-tab>
+
+            </p-tablist>
+
+            <p-tabpanels>
+
+                <p-tabpanel value="0">
+
+                    <div class="messages">
+
+                        <div *ngFor="let note of publicNotes" class="message staff-message">
+
+                            <div class="message-header">
+
+                                <strong>
+                                    {{ note.addedByName }}
+                                </strong>
+
+                                <span>
+                                    {{ note.role }}
+                                </span>
+
+                            </div>
+
+                            {{ note.text }}
+
+                        </div>
+
+                    </div>
+
+                </p-tabpanel>
+
+                <p-tabpanel value="1">
+
+                    <div class="messages">
+
+                        <div *ngFor="let note of internalNotes" class="message internal-message">
+
+                            <div class="message-header">
+
+                                <strong>
+                                    {{ note.addedByName }}
+                                </strong>
+
+                                <span>
+                                    {{ note.role }}
+                                </span>
+
+                            </div>
+
+                            {{ note.text }}
+
+                        </div>
+
+                    </div>
+
+                </p-tabpanel>
+
+            </p-tabpanels>
+
+        </p-tabs>
+
+    </div>
+
+    <!-- Actions -->
+
+    <div class="action-bar">
+
+        <button pButton severity="danger" icon="pi pi-times" label="Reject Application" (click)="rejectApplication()">
+        </button>
+
+        <button pButton icon="pi pi-arrow-right" label="Move To Decision" (click)="moveToDecision()">
+        </button>
+
+    </div>
+
+</div>

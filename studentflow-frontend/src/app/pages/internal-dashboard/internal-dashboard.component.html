@@ -1,0 +1,105 @@
+<div class="dashboard-container">
+
+    <div class="dashboard-header">
+
+        <div>
+            <h1>Dashboard</h1>
+            <p>Manage applications in your workflow queue</p>
+        </div>
+
+        <div class="role-badge">
+            {{ currentRole }}
+        </div>
+
+    </div>
+
+    <!-- Stats -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <h3>{{ stats.pending }}</h3>
+            <span>Pending</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>{{ stats.inProgress }}</h3>
+            <span>In Progress</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>{{ stats.completed }}</h3>
+            <span>Completed</span>
+        </div>
+
+        <div class="stat-card">
+            <h3>{{ stats.rejected }}</h3>
+            <span>Rejected</span>
+        </div>
+
+    </div>
+
+    <!-- Search -->
+
+    <div class="search-section">
+        <input pInputText type="text" placeholder="Search applications..." [(ngModel)]="searchText">
+    </div>
+
+    <!-- Table -->
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Course</th>
+                    <th>University</th>
+                    <th>Stage</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr *ngFor="let application of filteredApplications">
+
+                    <td>
+                        {{ application.studentName }}
+                    </td>
+
+                    <td>
+                        {{ application.courseName }}
+                    </td>
+
+                    <td>
+                        {{ application.universityName }}
+                    </td>
+
+                    <td>
+
+                        <span class="stage-badge">
+
+                            {{ application.currentStage }}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <button pButton label="Review" icon="pi pi-eye" (click)="openApplication(application)">
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

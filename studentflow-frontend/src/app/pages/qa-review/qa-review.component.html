@@ -1,0 +1,300 @@
+<div class="qa-container">
+
+    <div class="page-header">
+
+        <div>
+            <h1>QA Review</h1>
+            <p>Review application documents and move application to next stage.</p>
+        </div>
+
+    </div>
+
+    <!-- WORKFLOW -->
+
+    <div class="card workflow-card">
+
+        <div class="workflow">
+
+            <div class="step completed">
+                <div class="circle">
+                    <i class="pi pi-check"></i>
+                </div>
+                <span>NEW_APP</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step active">
+                <div class="circle">
+                    2
+                </div>
+                <span>QA_REVIEW</span>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="step">
+                <div class="circle">
+                    3
+                </div>
+                <span>APP_REVIEW</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TOP -->
+
+    <div class="top-grid">
+
+        <div class="card">
+
+            <h2>Student Information</h2>
+
+            <div class="info-row">
+                <label>Name</label>
+                <span>{{ student.studentName }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>Email</label>
+                <span>{{ student.studentEmail }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>University</label>
+                <span>{{ student.universityName }}</span>
+            </div>
+
+            <div class="info-row">
+                <label>Course</label>
+                <span>{{ student.courseName }}</span>
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>AI Assessment</h2>
+
+            <div class="assessment-item">
+
+                <span>Readiness</span>
+
+                <div class="badge warning">
+                    Medium
+                </div>
+
+            </div>
+
+            <div class="assessment-group">
+
+                <h4>Missing Documents</h4>
+
+                <div class="badge danger" *ngFor="let item of aiReview.missingDocuments">
+
+                    {{ item }}
+
+                </div>
+
+            </div>
+
+            <div class="assessment-group">
+
+                <h4>Risks</h4>
+
+                <div class="risk-item" *ngFor="let risk of aiReview.risks">
+
+                    ⚠ {{ risk }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- DOCUMENTS -->
+
+    <div class="card">
+
+        <div class="section-header">
+
+            <h2>Document Verification</h2>
+
+            <span>
+                {{ documents.length }} Documents
+            </span>
+
+        </div>
+
+        <div class="document-row" *ngFor="let doc of documents">
+
+            <div class="document-info">
+
+                <strong>{{ doc.name }}</strong>
+
+                <small *ngIf="!doc.uploaded" class="missing">
+
+                    Missing
+
+                </small>
+
+                <small *ngIf="doc.uploaded && !doc.verified" class="pending">
+
+                    Pending Verification
+
+                </small>
+
+                <small *ngIf="doc.verified" class="verified">
+
+                    Verified
+
+                </small>
+
+            </div>
+
+            <div class="document-actions">
+
+                <button pButton icon="pi pi-eye" text (click)="viewDocument(doc)">
+                </button>
+
+                <button *ngIf="doc.uploaded && !doc.verified" pButton icon="pi pi-check" label="Verify"
+                    severity="success" (click)="verifyDocument(doc)">
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+
+    <div class="action-bar">
+
+        <button pButton severity="danger" icon="pi pi-times" label="Reject Application" (click)="rejectApplication()">
+        </button>
+
+        <button pButton icon="pi pi-arrow-right" label="Move To App Review" (click)="moveToAppReview()">
+        </button>
+
+    </div>
+
+    <!-- CONVERSATION -->
+
+    <!-- COMMUNICATION -->
+
+    <div class="card">
+
+        <h2>Communication</h2>
+
+        <p-tabs value="0">
+
+            <p-tablist>
+
+                <p-tab value="0">
+                    Public Conversation
+                </p-tab>
+
+                <p-tab value="1">
+                    Internal Notes
+                </p-tab>
+
+            </p-tablist>
+
+            <p-tabpanels>
+
+                <!-- PUBLIC -->
+
+                <p-tabpanel value="0">
+
+                    <div class="messages">
+
+                        <div *ngFor="let note of publicNotes" class="message"
+                            [class.staff-message]="note.role !== 'AGENT'">
+
+                            <div class="message-header">
+
+                                <strong>
+                                    {{ note.addedByName }}
+                                </strong>
+
+                                <span>
+                                    {{ note.role }}
+                                </span>
+
+                            </div>
+
+                            <div class="message-body">
+                                {{ note.text }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="message-input">
+
+                        <textarea pInputTextarea rows="3" [(ngModel)]="newPublicNote"
+                            placeholder="Message visible to Agent">
+                    </textarea>
+
+                        <button pButton icon="pi pi-send" label="Send" (click)="addPublicNote()">
+                        </button>
+
+                    </div>
+
+                </p-tabpanel>
+
+                <!-- INTERNAL -->
+
+                <p-tabpanel value="1">
+
+                    <div class="messages">
+
+                        <div *ngFor="let note of internalNotes" class="message internal-message">
+
+                            <div class="message-header">
+
+                                <strong>
+                                    {{ note.addedByName }}
+                                </strong>
+
+                                <span>
+                                    {{ note.role }}
+                                </span>
+
+                            </div>
+
+                            <div class="message-body">
+                                {{ note.text }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="message-input">
+
+                        <textarea pInputTextarea rows="3" [(ngModel)]="newInternalNote"
+                            placeholder="Visible only to internal staff">
+                    </textarea>
+
+                        <button pButton icon="pi pi-send" label="Save Note" severity="secondary"
+                            (click)="addInternalNote()">
+                        </button>
+
+                    </div>
+
+                </p-tabpanel>
+
+            </p-tabpanels>
+
+        </p-tabs>
+
+    </div>
+
+</div>
