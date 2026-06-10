@@ -2,7 +2,7 @@ const https = require("https");
 
 class AIService {
     constructor() {
-        this.provider = process.env.AI_PROVIDER || "MOCK";
+        this.provider = (process.env.AI_PROVIDER || "MOCK").toUpperCase();
         this.timeout = parseInt(process.env.AI_TIMEOUT || "5000");
     }
 

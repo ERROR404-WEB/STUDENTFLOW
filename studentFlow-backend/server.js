@@ -8,7 +8,13 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:4200",
+    "https://studentflow.netlify.app",
+    /https:\/\/.*\.netlify\.app$/
+  ]
+}));
 app.use(express.json());
 
 app.use("/api/auth", require("./routes/auth.routes"));
