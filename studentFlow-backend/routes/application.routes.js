@@ -1,6 +1,6 @@
 const express = require("express");
 const Application = require("../models/Application");
-const { ROLES, VALID_TRANSITIONS, ROLE_TRANSITIONS } = require("../models/enums");
+const { STAGES, ROLES, VALID_TRANSITIONS, ROLE_TRANSITIONS } = require("../models/enums");
 const authMiddleware = require("../middleware/auth.middleware");
 const aiService = require("../services/ai.service");
 const actionsService = require("../services/actions.service");
@@ -36,6 +36,14 @@ router.post("/", authMiddleware, async (req, res) => {
             return res.status(400).json({
                 message: "Student name, email, phone, nationality, course, university and agentId are required"
             });
+        }
+
+        if (intakeMonth && !["January", "May", "September"].includes(intakeMonth)) {
+            return res.status(400).json({ message: "Intake month must be January, May, or September" });
+        }
+
+        if (intakeYear && isNaN(Number(intakeYear))) {
+            return res.status(400).json({ message: "Intake year must be a valid number" });
         }
 
         const application = await Application.create({
@@ -110,7 +118,7 @@ router.get("/stats/dashboard", authMiddleware, async (req, res) => {
         const pendingQaCount = await Application.countDocuments({ currentStage: { $in: ["NEW_APP", "QA_REVIEW"] } });
         const pendingVisaCount = await Application.countDocuments({ currentStage: { $in: ["DEPOSIT", "CAS_REVIEW"] } });
 
-        const stagesList = ["NEW_APP", "QA_REVIEW", "APP_REVIEW", "DECISION", "DEPOSIT", "CAS_REVIEW", "ENROLMENT"];
+        const stagesList = Object.values(STAGES);
         const stageCountsPromises = stagesList.map(async (stage) => {
             const count = await Application.countDocuments({ currentStage: stage });
             return { stage, count };
@@ -264,6 +272,10 @@ router.post("/:id/notes", authMiddleware, async (req, res) => {
             return res.status(400).json({ message: "Note text is required" });
         }
 
+        if (visibility && !["PUBLIC", "INTERNAL"].includes(visibility)) {
+            return res.status(400).json({ message: "Visibility must be PUBLIC or INTERNAL" });
+        }
+
         const application = await Application.findById(id);
         if (!application) {
             return res.status(404).json({ message: "Application not found" });
@@ -300,6 +312,10 @@ router.patch("/:id/documents/:docKey/verify", authMiddleware, async (req, res) =
             return res.status(400).json({ message: "Verified state (true/false) is required" });
         }
 
+        if (typeof verified !== "boolean") {
+            return res.status(400).json({ message: "Verified state must be a boolean" });
+        }
+
         const application = await Application.findById(id);
         if (!application) {
             return res.status(404).json({ message: "Application not found" });
@@ -330,6 +346,22 @@ router.patch("/:id", authMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         const updates = req.body;
+
+        // Block direct modification of currentStage to protect the workflow state machine
+        if (updates && updates.currentStage) {
+            return res.status(400).json({
+                message: "Direct modification of currentStage is blocked. Please use the /stage endpoint to transition stages."
+            });
+        }
+
+        if (updates) {
+            if (updates.intakeMonth && !["January", "May", "September"].includes(updates.intakeMonth)) {
+                return res.status(400).json({ message: "Intake month must be January, May, or September" });
+            }
+            if (updates.intakeYear && isNaN(Number(updates.intakeYear))) {
+                return res.status(400).json({ message: "Intake year must be a valid number" });
+            }
+        }
 
         const application = await Application.findByIdAndUpdate(
             id,

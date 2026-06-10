@@ -1,14 +1,15 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
+const path = require("path");
 const User = require("../models/User");
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, "../.env") });
 
 const createAdmin = async () => {
     await mongoose.connect(process.env.MONGO_URI);
 
-    const email = "admin@studentflow.com";
+    const email = "SYS_ADMIN";
 
     const existingAdmin = await User.findOne({ email });
 

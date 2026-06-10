@@ -3,15 +3,21 @@ import { inject } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const messageService = inject(MessageService);
+  const router = inject(Router);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       let errMsg = 'An unexpected error occurred. Please try again.';
 
-      if (error.error) {
+      if (error.status === 401 && !req.url.includes('/api/auth/login')) {
+        localStorage.clear();
+        router.navigate(['/login']);
+        errMsg = 'Your session has expired. Please log in again.';
+      } else if (error.error) {
         if (typeof error.error === 'string') {
           errMsg = error.error;
         } else if (error.error.message) {

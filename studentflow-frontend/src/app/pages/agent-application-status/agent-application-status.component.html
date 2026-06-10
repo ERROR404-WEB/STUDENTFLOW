@@ -54,6 +54,11 @@
 
             </div>
 
+            <div *ngIf="documents.length === 0" class="no-data" style="margin-bottom: 16px;">
+                <i class="pi pi-folder-open"></i>
+                <span>No documents registered.</span>
+            </div>
+
             <div *ngFor="let doc of documents" class="document-row">
 
                 <div>
@@ -121,6 +126,11 @@
                 <h3>Application Conversation</h3>
 
                 <div class="messages">
+
+                    <div *ngIf="notes.length === 0" class="no-data">
+                        <i class="pi pi-comments"></i>
+                        <span>No notes or comments yet.</span>
+                    </div>
 
                     <div *ngFor="let note of notes" class="message" [class.agent]="note.role === 'AGENT'">
 

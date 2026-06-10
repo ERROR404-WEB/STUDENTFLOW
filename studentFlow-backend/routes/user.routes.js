@@ -43,10 +43,17 @@ router.post("/", authMiddleware, async (req, res) => {
 
     const { name, email, password, role } = req.body;
 
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ message: "Name, email, password, and role are required" });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
+
     const allowedRoles = [
       "ADMIN",
       "AGENT",
-      "COUNSELLOR",
       "QA_OFFICER",
       "ADMISSION_OFFICER",
       "VISA_OFFICER",
@@ -99,9 +106,30 @@ router.patch("/:id", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    if (email && email !== user.email) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+      user.email = email;
+    }
+
+    if (role) {
+      const allowedRoles = [
+        "ADMIN",
+        "AGENT",
+        "QA_OFFICER",
+        "ADMISSION_OFFICER",
+        "VISA_OFFICER",
+        "ENROLMENT_OFFICER"
+      ];
+      if (!allowedRoles.includes(role)) {
+        return res.status(400).json({ message: "Invalid internal role" });
+      }
+      user.role = role;
+    }
+
     if (name) user.name = name;
-    if (email) user.email = email;
-    if (role) user.role = role;
 
     await user.save();
     res.json({
@@ -128,6 +156,9 @@ router.patch("/:id/status", authMiddleware, async (req, res) => {
     const { isActive } = req.body;
     if (isActive === undefined) {
       return res.status(400).json({ message: "isActive state is required" });
+    }
+    if (typeof isActive !== "boolean") {
+      return res.status(400).json({ message: "isActive must be a boolean" });
     }
 
     const user = await User.findById(req.params.id);

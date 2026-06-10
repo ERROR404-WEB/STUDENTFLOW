@@ -40,11 +40,12 @@ export class AgentApplicationStatusComponent {
   ];
 
   get currentIndex(): number {
-    if (!this.student || !this.student.stage) {
+    const stageVal = this.student?.currentStage || this.student?.stage;
+    if (!stageVal) {
       return 0; // Default to first step (Submitted) if not loaded yet
     }
 
-    const stage = this.student.stage.toUpperCase();
+    const stage = stageVal.toUpperCase();
 
     switch (stage) {
       case 'NEW_APP':
@@ -58,6 +59,7 @@ export class AgentApplicationStatusComponent {
       case 'CAS_REVIEW':
         return 3; // Deposit
       case 'ENROLMENT':
+      case 'COMPLETED':
         return 4; // Enrolled
       case 'APP_REJECTED':
       case 'CLOSED_LOST':
@@ -67,31 +69,8 @@ export class AgentApplicationStatusComponent {
     }
   }
 
-  documents = [
-    { name: 'Passport', uploaded: true, fileName: 'passport.pdf' },
-    { name: 'Academic Documents', uploaded: true, fileName: 'academic.pdf' },
-    { name: 'IELTS', uploaded: true, fileName: 'ielts.pdf' },
-    { name: 'Statement of Purpose', uploaded: false, fileName: '' },
-    { name: 'CV / Resume', uploaded: true, fileName: 'cv.pdf' }
-  ];
-
-  notes = [
-    {
-      addedByName: 'QA Officer',
-      role: 'QA_OFFICER',
-      text: 'Passport and academic documents verified successfully.'
-    },
-    {
-      addedByName: 'Agent',
-      role: 'AGENT',
-      text: 'Student uploaded IELTS scorecard.'
-    },
-    {
-      addedByName: 'Admission Officer',
-      role: 'ADMISSION_OFFICER',
-      text: 'Application moved for university review.'
-    }
-  ];
+  documents: any[] = [];
+  notes: any[] = [];
 
   newNote = '';
   applicationId = '';
@@ -105,13 +84,28 @@ export class AgentApplicationStatusComponent {
   addNote() {
     if (!this.newNote.trim()) return;
 
-    this.notes.push({
-      addedByName: 'Agent',
-      role: 'AGENT',
-      text: this.newNote
-    });
+    const text = this.newNote.trim();
+    const addedByName = localStorage.getItem('name') || 'Agent';
+    const role = localStorage.getItem('role') || 'AGENT';
+    const visibility = 'PUBLIC';
 
-    this.newNote = '';
+    this.applicationService.addApplicationNote(this.applicationId, text, visibility, addedByName, role).subscribe({
+      next: (res: any) => {
+        if (res && res.application) {
+          this.notes = res.application.notes || [];
+        } else {
+          this.notes.push({
+            addedByName,
+            role,
+            text
+          });
+        }
+        this.newNote = '';
+      },
+      error: (err) => {
+        console.error('Error adding note:', err);
+      }
+    });
   }
 
   editApplication() {
@@ -134,6 +128,8 @@ export class AgentApplicationStatusComponent {
     this.applicationService.getAgentApplicationStatus(this.applicationId).subscribe({
       next: (res: any) => {
         this.student = res.application;
+        this.notes = res.application.notes || [];
+        this.documents = res.application.documents || [];
       },
       error: (err) => {
         console.log(err);

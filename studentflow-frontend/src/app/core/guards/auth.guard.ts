@@ -8,12 +8,12 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const token = localStorage.getItem('token');
 
-  if (token) {
+  if (token && token !== 'null' && token !== 'undefined') {
     return true;
   }
 
   // Redirect to login page if not authenticated
-  router.navigate(['/']);
+  router.navigate(['/login']);
   return false;
 };
 
@@ -22,7 +22,7 @@ export const noAuthGuard: CanActivateFn = (route, state) => {
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
 
-  if (token) {
+  if (token && token !== 'null' && token !== 'undefined') {
     if (role === 'AGENT') {
       router.navigate(['/applications']);
     } else if (role === 'ADMIN') {

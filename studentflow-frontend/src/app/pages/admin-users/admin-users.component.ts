@@ -32,7 +32,6 @@ export class AdminUsersComponent implements OnInit {
   roles = [
     { label: 'Admin', value: 'ADMIN' },
     { label: 'Agent', value: 'AGENT' },
-    { label: 'Counsellor', value: 'COUNSELLOR' },
     { label: 'QA Officer', value: 'QA_OFFICER' },
     { label: 'Admission Officer', value: 'ADMISSION_OFFICER' },
     { label: 'Visa Officer', value: 'VISA_OFFICER' },

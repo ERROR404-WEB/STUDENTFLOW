@@ -4,9 +4,14 @@ import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
     {
-        path: '',
+        path: 'login',
         canActivate: [noAuthGuard],
         loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
+    },
+    {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'login'
     },
     {
         path: 'agent-signup',
@@ -40,7 +45,7 @@ export const routes: Routes = [
     {
         path: 'internal-dashboard',
         canActivate: [authGuard, roleGuard],
-        data: { roles: ['QA_OFFICER', 'ADMISSION_OFFICER', 'VISA_OFFICER', 'ENROLMENT_OFFICER', 'COUNSELLOR', 'ADMIN'] },
+        data: { roles: ['QA_OFFICER', 'ADMISSION_OFFICER', 'VISA_OFFICER', 'ENROLMENT_OFFICER', 'ADMIN'] },
         loadComponent: () => import('./pages/internal-dashboard/internal-dashboard.component').then(m => m.InternalDashboardComponent)
     },
     {

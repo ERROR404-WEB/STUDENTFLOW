@@ -23,16 +23,12 @@ router.post("/agent-signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    if (!name) {
-      throw new Error('Please provide name')
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Name, email, and password are required" });
     }
 
-    if (!email) {
-      throw new Error('Please provide email')
-    }
-
-    if (!password) {
-      throw new Error('Please provide password')
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
     }
 
     const existingUser = await User.findOne({ email });
@@ -69,12 +65,8 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email) {
-      throw new Error('Please provide email')
-    }
-
-    if (!password) {
-      throw new Error('Please provide password')
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
     }
 
     const user = await User.findOne({ email });
@@ -114,6 +106,14 @@ router.post("/signup", async (req, res) => {
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Name, email, and password are required" });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
+
+    if (role && !Object.values(ROLES).includes(role)) {
+      return res.status(400).json({ message: "Invalid role" });
     }
 
     const existingUser = await User.findOne({ email });

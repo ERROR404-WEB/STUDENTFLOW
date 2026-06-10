@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
 import { LoginService } from './login.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -19,12 +20,23 @@ export class LoginComponent {
   email: string = '';
   password: string = '';
 
+  messageService = inject(MessageService);
+
   constructor(
     private loginService: LoginService,
     private router: Router
   ) { }
 
   onLogin() {
+
+    if (!this.email || !this.password) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please enter email and password'
+      })
+      return;
+    }
 
     const postData = {
       email: this.email,

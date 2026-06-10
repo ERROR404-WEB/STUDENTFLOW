@@ -11,8 +11,18 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent {
 
-  userName = localStorage.getItem('name') || 'User';
-  role = localStorage.getItem('role') || '';
+  get userName(): string {
+    return localStorage.getItem('name') || 'User';
+  }
+
+  get role(): string {
+    return localStorage.getItem('role') || '';
+  }
+
+  get isLoggedIn(): boolean {
+    const token = localStorage.getItem('token');
+    return !!(token && token !== 'null' && token !== 'undefined');
+  }
 
   showBackButton = true;
   showProfileMenu = false;

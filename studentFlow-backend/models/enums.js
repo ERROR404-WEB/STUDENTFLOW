@@ -7,7 +7,8 @@ export const STAGES = {
     "CAS_REVIEW": "CAS_REVIEW",
     "ENROLMENT": "ENROLMENT",
     "APP_REJECTED": "APP_REJECTED",
-    "CLOSED_LOST": "CLOSED_LOST"
+    "CLOSED_LOST": "CLOSED_LOST",
+    "COMPLETED": "COMPLETED"
 }
 
 
@@ -20,14 +21,14 @@ export const STAGE_NAMES = {
     "CAS_REVIEW": "CAS Review",
     "ENROLMENT": "Enrolment",
     "APP_REJECTED": "Application Rejected",
-    "CLOSED_LOST": "Closed/Lost"
+    "CLOSED_LOST": "Closed/Lost",
+    "COMPLETED": "Completed"
 }
 
 
 export const ROLES = {
     "ADMIN": "ADMIN",
     "AGENT": "AGENT",
-    "COUNSELLOR": "COUNSELLOR",
     "QA_OFFICER": "QA_OFFICER",
     "ADMISSION_OFFICER": "ADMISSION_OFFICER",
     "VISA_OFFICER": "VISA_OFFICER",
