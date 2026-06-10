@@ -100,3 +100,27 @@
         padding: 36px 24px;
     }
 }
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input {
+        padding-right: 44px !important;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 14px;
+        cursor: pointer;
+        color: #64748b;
+        font-size: 18px;
+        z-index: 10;
+        transition: color 0.15s ease-in-out;
+
+        &:hover {
+            color: #0f172a;
+        }
+    }
+}

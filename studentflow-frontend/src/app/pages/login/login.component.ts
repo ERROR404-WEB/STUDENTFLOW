@@ -5,12 +5,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { LoginService } from './login.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ButtonModule, DividerModule, InputTextModule, FormsModule],
+  imports: [CommonModule, ButtonModule, DividerModule, InputTextModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -19,6 +20,7 @@ export class LoginComponent {
 
   email: string = '';
   password: string = '';
+  showPassword = false;
 
   messageService = inject(MessageService);
 
@@ -26,6 +28,10 @@ export class LoginComponent {
     private loginService: LoginService,
     private router: Router
   ) { }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   onLogin() {
 

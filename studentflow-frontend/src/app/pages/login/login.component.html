@@ -16,7 +16,10 @@
 
             <div class="form-field">
                 <label for="password">Password</label>
-                <input pInputText id="password" type="password" placeholder="Enter password" [(ngModel)]="password" />
+                <div class="password-wrapper">
+                    <input pInputText id="password" [type]="showPassword ? 'text' : 'password'" placeholder="Enter password" [(ngModel)]="password" />
+                    <i class="password-toggle pi" [class.pi-eye]="!showPassword" [class.pi-eye-slash]="showPassword" (click)="togglePassword()"></i>
+                </div>
             </div>
 
             <p-button label="Login" icon="pi pi-user" styleClass="login-btn" (onClick)="onLogin()">
