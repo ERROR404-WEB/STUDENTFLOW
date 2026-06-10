@@ -25,6 +25,8 @@ const seed = async () => {
       { name: "Admin User", email: "admin@studentflow.com", password: "Admin123!", role: "ADMIN" },
       { name: "QA Officer User", email: "qa@studentflow.com", password: "Qa123!", role: "QA_OFFICER" },
       { name: "Admission Officer User", email: "admission@studentflow.com", password: "Admission123!", role: "ADMISSION_OFFICER" },
+      { name: "Visa Officer User", email: "visa@studentflow.com", password: "Visa123!", role: "VISA_OFFICER" },
+      { name: "Enrolment Officer User", email: "enrolment@studentflow.com", password: "Enrolment123!", role: "ENROLMENT_OFFICER" },
       { name: "Agent User", email: "agent@test.com", password: "Agent123!", role: "AGENT" }
     ];
 
