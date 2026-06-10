@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { NavbarComponent } from "./shared/navbar/navbar.component";
 import { ToastModule } from 'primeng/toast';
 
@@ -16,4 +16,19 @@ import { LoaderService } from './core/services/loader.service';
 export class AppComponent {
   title = 'studentflow-frontend';
   loaderService = inject(LoaderService);
+  private router = inject(Router);
+
+  constructor() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.loaderService.show();
+      } else if (
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
+      ) {
+        this.loaderService.hide();
+      }
+    });
+  }
 }
