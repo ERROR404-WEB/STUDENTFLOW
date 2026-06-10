@@ -80,6 +80,8 @@ router.get("/", authMiddleware, async (req, res) => {
         // If the logged in user is an Agent, restrict to only their applications
         if (req.user.role === "AGENT") {
             query.agentId = req.user.id || req.user._id;
+        } else if (req.user.role === "ADMIN") {
+            // Admin sees all applications (no agentId filter applied)
         } else if (req.query.agentId) {
             query.agentId = req.query.agentId;
         }
