@@ -14,6 +14,12 @@ const seed = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("Database connected successfully.");
 
+    // Clear existing data for a fresh seed
+    console.log("Clearing existing users and applications...");
+    await User.deleteMany({});
+    await Application.deleteMany({});
+    console.log("Existing data cleared.");
+
     // 1. Seed Users
     const usersToSeed = [
       { name: "Admin User", email: "admin@studentflow.com", password: "Admin123!", role: "ADMIN" },
