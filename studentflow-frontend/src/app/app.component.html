@@ -1,3 +1,6 @@
+<div class="global-loading-bar" *ngIf="loaderService.loading$ | async">
+  <div class="loading-progress"></div>
+</div>
 <p-toast></p-toast>
 <app-navbar></app-navbar>
 <router-outlet></router-outlet>
