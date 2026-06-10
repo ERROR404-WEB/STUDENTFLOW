@@ -16,9 +16,9 @@ const seed = async () => {
 
     // 1. Seed Users
     const usersToSeed = [
-      { name: "Admin User", email: "admin@studyflow.com", password: "Admin123!", role: "ADMIN" },
-      { name: "QA Officer User", email: "qa@studyflow.com", password: "Qa123!", role: "QA_OFFICER" },
-      { name: "Admission Officer User", email: "admission@studyflow.com", password: "Admission123!", role: "ADMISSION_OFFICER" },
+      { name: "Admin User", email: "admin@studentflow.com", password: "Admin123!", role: "ADMIN" },
+      { name: "QA Officer User", email: "qa@studentflow.com", password: "Qa123!", role: "QA_OFFICER" },
+      { name: "Admission Officer User", email: "admission@studentflow.com", password: "Admission123!", role: "ADMISSION_OFFICER" },
       { name: "Agent User", email: "agent@test.com", password: "Agent123!", role: "AGENT" }
     ];
 
