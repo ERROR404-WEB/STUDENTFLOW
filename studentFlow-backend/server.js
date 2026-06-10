@@ -12,6 +12,7 @@ app.use(cors({
   origin: [
     "http://localhost:4200",
     "https://studentflow.netlify.app",
+    "https://studentflow-crm.netlify.app",
     /https:\/\/.*\.netlify\.app$/
   ]
 }));
