@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
 import { TabsModule } from 'primeng/tabs';
 import { ApplicationFormService } from '../application-form/application-form.service';
+import { getStageFullDisplay } from '../../core/utils/stage.utils';
 
 @Component({
   selector: 'app-enrolment-review',
@@ -22,6 +23,10 @@ import { ApplicationFormService } from '../application-form/application-form.ser
   styleUrl: './enrolment-review.component.scss'
 })
 export class EnrolmentReviewComponent implements OnInit {
+
+  getStageDisplay(stage: string): string {
+    return getStageFullDisplay(stage);
+  }
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);

@@ -28,6 +28,10 @@ export class ApplicationFormService {
     return this.http.patch(`${this.url}/api/applications/${id}/stage`, { stage });
   }
 
+  updateApplication(id: string, updates: any) {
+    return this.http.patch(`${this.url}/api/applications/${id}`, updates);
+  }
+
   addApplicationNote(id: string, text: string, visibility: string, addedByName: string, role: string) {
     return this.http.post(`${this.url}/api/applications/${id}/notes`, { text, visibility, addedByName, role });
   }

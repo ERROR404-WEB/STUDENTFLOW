@@ -19,7 +19,6 @@ class AIService {
             }
         } catch (error) {
             console.error("AI Service Error:", error.message);
-            // Graceful degradation: Return standard advisory alert so system doesn't break
             return {
                 readiness: "UNKNOWN",
                 missingDocuments: ["System was unable to perform AI check at this time."],
@@ -45,7 +44,6 @@ class AIService {
         `;
     }
 
-    // Helper to make native HTTPS requests with timeouts
     makeHttpsRequest(options, postData) {
         return new Promise((resolve, reject) => {
             const req = https.request(options, (res) => {

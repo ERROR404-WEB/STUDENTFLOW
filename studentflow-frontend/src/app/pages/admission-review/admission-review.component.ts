@@ -8,6 +8,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { TabsModule } from 'primeng/tabs';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ApplicationFormService } from '../application-form/application-form.service';
+import { getStageFullDisplay } from '../../core/utils/stage.utils';
 
 @Component({
   selector: 'app-admission-review',
@@ -24,6 +25,10 @@ import { ApplicationFormService } from '../application-form/application-form.ser
   styleUrl: './admission-review.component.scss'
 })
 export class AdmissionReviewComponent implements OnInit {
+
+  getStageDisplay(stage: string): string {
+    return getStageFullDisplay(stage);
+  }
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -43,13 +48,12 @@ export class AdmissionReviewComponent implements OnInit {
 
   decisionOptions = [
     { label: 'Unconditional Offer', value: 'UNCONDITIONAL' },
-    { label: 'Conditional Offer', value: 'CONDITIONAL' },
-    { label: 'Reject', value: 'REJECT' }
+    { label: 'Conditional Offer', value: 'CONDITIONAL' }
   ];
 
   offerConditions = '';
   decisionReason = '';
-  selectedDecision = 'CONDITIONAL';
+  selectedDecision = 'UNCONDITIONAL';
 
   newPublicNote = '';
   newInternalNote = '';
@@ -147,15 +151,41 @@ export class AdmissionReviewComponent implements OnInit {
   }
 
   moveToDecision() {
-    // Moves to DECISION stage
-    this.applicationService.updateApplicationStage(this.applicationId, 'DECISION').subscribe({
-      next: (res: any) => {
-        alert('Application successfully moved to Decision stage');
-        this.router.navigate(['/internal-dashboard']);
+    if (!this.decisionReason.trim()) {
+      alert('Please enter review notes in the Admission Recommendation section.');
+      return;
+    }
+
+    const noteText = `Decision Recommendation: ${this.selectedDecision === 'UNCONDITIONAL' ? 'Unconditional Offer' : 'Conditional Offer'}\nNotes: ${this.decisionReason}` +
+      (this.selectedDecision === 'CONDITIONAL' && this.offerConditions ? `\nConditions: ${this.offerConditions}` : '');
+
+    const userName = localStorage.getItem('name') || 'Admission Officer';
+    const userRole = localStorage.getItem('role') === 'ADMIN' ? 'ADMISSION_OFFICER' : (localStorage.getItem('role') || 'ADMISSION_OFFICER');
+
+    // Save notes as an Admission note first
+    this.applicationService.addApplicationNote(
+      this.applicationId,
+      noteText,
+      'PUBLIC',
+      userName,
+      userRole
+    ).subscribe({
+      next: () => {
+        // Move to DECISION stage
+        this.applicationService.updateApplicationStage(this.applicationId, 'DECISION').subscribe({
+          next: (res: any) => {
+            alert('Application successfully moved to Decision stage');
+            this.router.navigate(['/internal-dashboard']);
+          },
+          error: (err) => {
+            console.error('Error moving application to Decision:', err);
+            alert('Failed to update stage: ' + err.message);
+          }
+        });
       },
-      error: (err) => {
-        console.error('Error moving application to Decision:', err);
-        alert('Failed to update stage: ' + err.message);
+      error: (err: any) => {
+        console.error('Error saving decision note:', err);
+        alert('Failed to save decision note: ' + err.message);
       }
     });
   }

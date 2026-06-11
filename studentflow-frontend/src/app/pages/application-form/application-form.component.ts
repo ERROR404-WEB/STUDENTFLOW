@@ -28,7 +28,8 @@ type UploadedDocs = Record<string, File>;
   styleUrl: './application-form.component.scss'
 })
 export class ApplicationFormComponent {
-  studentName = '';
+  firstName = '';
+  lastName = '';
   studentEmail = '';
   phoneNumber = '';
   nationality = '';
@@ -37,6 +38,17 @@ export class ApplicationFormComponent {
   intakeMonth = 'September';
   intakeYear = new Date().getFullYear();
   agentNote = '';
+
+  // Touched states for inline validations
+  firstNameTouched = false;
+  lastNameTouched = false;
+  emailTouched = false;
+  phoneTouched = false;
+  countryTouched = false;
+  universityTouched = false;
+  courseTouched = false;
+  intakeMonthTouched = false;
+  intakeYearTouched = false;
 
   intakeMonths = [
     { label: 'January', value: 'January' },
@@ -69,6 +81,45 @@ export class ApplicationFormComponent {
     }
   }
 
+  getUploadedDocsCount(): number {
+    return Object.keys(this.uploadedDocs).length;
+  }
+
+  isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  get formTouched(): boolean {
+    return (
+      this.firstNameTouched ||
+      this.lastNameTouched ||
+      this.emailTouched ||
+      this.phoneTouched ||
+      this.countryTouched ||
+      this.universityTouched ||
+      this.courseTouched ||
+      this.intakeMonthTouched ||
+      this.intakeYearTouched
+    );
+  }
+
+  get isFormInvalid(): boolean {
+    return (
+      !this.firstName?.trim() ||
+      !this.lastName?.trim() ||
+      !this.studentEmail?.trim() ||
+      !this.isValidEmail(this.studentEmail) ||
+      !this.phoneNumber?.trim() ||
+      !this.nationality?.trim() ||
+      !this.courseName?.trim() ||
+      !this.universityName?.trim() ||
+      !this.intakeMonth ||
+      !this.intakeYear ||
+      this.getUploadedDocsCount() === 0
+    );
+  }
+
   getDocumentsForPayload() {
     return this.requiredDocs
       .filter((doc) => !!this.uploadedDocs[doc.key])
@@ -87,8 +138,13 @@ export class ApplicationFormComponent {
   }
 
   submitApplication() {
+    if (this.isFormInvalid) {
+      return;
+    }
+
     const payload = {
-      studentName: this.studentName,
+      firstName: this.firstName,
+      lastName: this.lastName,
       studentEmail: this.studentEmail,
       phoneNumber: this.phoneNumber,
       nationality: this.nationality,

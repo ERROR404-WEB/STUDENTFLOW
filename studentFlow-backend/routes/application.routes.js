@@ -9,8 +9,10 @@ const router = express.Router();
 
 router.post("/", authMiddleware, async (req, res) => {
     try {
-        const {
+        let {
             studentName,
+            firstName,
+            lastName,
             studentEmail,
             phoneNumber,
             nationality,
@@ -22,32 +24,69 @@ router.post("/", authMiddleware, async (req, res) => {
             documents,
         } = req.body || {};
 
-        const agentId = req.query.userID;
+        if (studentName && studentName.trim()) {
+            const parts = studentName.trim().split(/\s+/);
+            if (!firstName) firstName = parts[0];
+            if (!lastName) lastName = parts.slice(1).join(" ");
+        }
 
-        if (
-            !studentName ||
-            !studentEmail ||
-            !phoneNumber ||
-            !nationality ||
-            !courseName ||
-            !universityName ||
-            !agentId
-        ) {
+        const agentId = req.query.userID;
+        const errors = {};
+
+        if (!firstName || !firstName.trim()) {
+            errors.firstName = "First Name is required.";
+        }
+        if (!lastName || !lastName.trim()) {
+            errors.lastName = "Last Name is required.";
+        }
+        if (!studentEmail || !studentEmail.trim()) {
+            errors.studentEmail = "Email is required.";
+        } else {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(studentEmail)) {
+                errors.studentEmail = "Please enter a valid email address.";
+            }
+        }
+        if (!phoneNumber || !phoneNumber.trim()) {
+            errors.phoneNumber = "Phone Number is required.";
+        }
+        if (!nationality || !nationality.trim()) {
+            errors.nationality = "Country is required.";
+        }
+        if (!universityName || !universityName.trim()) {
+            errors.universityName = "University is required.";
+        }
+        if (!courseName || !courseName.trim()) {
+            errors.courseName = "Course is required.";
+        }
+        if (!intakeMonth || !intakeMonth.trim()) {
+            errors.intakeMonth = "Intake Month is required.";
+        } else if (!["January", "May", "September"].includes(intakeMonth)) {
+            errors.intakeMonth = "Intake month must be January, May, or September.";
+        }
+        if (!intakeYear) {
+            errors.intakeYear = "Intake Year is required.";
+        } else if (isNaN(Number(intakeYear))) {
+            errors.intakeYear = "Intake Year must be a valid number.";
+        }
+        if (!documents || !Array.isArray(documents) || documents.length === 0) {
+            errors.documents = "Please upload at least one document before submitting.";
+        }
+        if (!agentId) {
+            errors.agentId = "Agent ID is required.";
+        }
+
+        if (Object.keys(errors).length > 0) {
             return res.status(400).json({
-                message: "Student name, email, phone, nationality, course, university and agentId are required"
+                message: "Validation failed",
+                errors
             });
         }
 
-        if (intakeMonth && !["January", "May", "September"].includes(intakeMonth)) {
-            return res.status(400).json({ message: "Intake month must be January, May, or September" });
-        }
-
-        if (intakeYear && isNaN(Number(intakeYear))) {
-            return res.status(400).json({ message: "Intake year must be a valid number" });
-        }
+        const finalStudentName = `${firstName.trim()} ${lastName.trim()}`;
 
         const application = await Application.create({
-            studentName,
+            studentName: finalStudentName,
             studentEmail,
             phoneNumber,
             nationality,
@@ -241,9 +280,9 @@ router.patch("/:id/stage", authMiddleware, async (req, res) => {
             }
         }
 
-        // Rule 2: Cannot transition from APP_REVIEW to DECISION unless at least one review note exists from ADMISSION_OFFICER
+        // Rule 2: Cannot transition from APP_REVIEW to DECISION unless at least one review note exists from ADMISSION_OFFICER (or ADMIN)
         if (currentStage === "APP_REVIEW" && stage === "DECISION") {
-            const hasReviewNote = application.notes.some(n => n.role === "ADMISSION_OFFICER");
+            const hasReviewNote = application.notes.some(n => n.role === "ADMISSION_OFFICER" || n.role === "ADMIN");
             if (!hasReviewNote) {
                 return res.status(400).json({
                     message: "Precondition failed: An Admission Officer must record a review note before moving to Decision stage"

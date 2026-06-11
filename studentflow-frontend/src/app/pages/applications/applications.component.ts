@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ApplicationFormService } from '../application-form/application-form.service';
+import { getStageFullDisplay } from '../../core/utils/stage.utils';
 
 @Component({
   selector: 'app-applications',
@@ -22,6 +23,43 @@ import { ApplicationFormService } from '../application-form/application-form.ser
 export class ApplicationsComponent {
   searchText = '';
   applications: any[] = [];
+
+  getStageDisplay(stage: string): string {
+    if (this.isAdmin) {
+      return getStageFullDisplay(stage);
+    } else {
+      const normalized = (stage || '').toUpperCase();
+      switch (normalized) {
+        case 'NEW_APP':
+          return 'Submitted';
+        case 'QA_REVIEW':
+        case 'APP_REVIEW':
+          return 'Processing';
+        case 'DECISION':
+          return 'Decision';
+        case 'DEPOSIT':
+        case 'CAS_REVIEW':
+          return 'Deposit';
+        case 'ENROLMENT':
+        case 'COMPLETED':
+          return 'Enrolled';
+        case 'APP_REJECTED':
+          return 'Rejected';
+        case 'CLOSED_LOST':
+          return 'Closed/Lost';
+        default:
+          return stage;
+      }
+    }
+  }
+
+  get role(): string {
+    return localStorage.getItem('role') || '';
+  }
+
+  get isAdmin(): boolean {
+    return this.role === 'ADMIN';
+  }
 
   constructor(
     private router: Router,

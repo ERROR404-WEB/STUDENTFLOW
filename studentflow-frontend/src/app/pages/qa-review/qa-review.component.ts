@@ -6,8 +6,9 @@ import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ApplicationFormService } from '../application-form/application-form.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
+import { getStageFullDisplay } from '../../core/utils/stage.utils';
 
 @Component({
   selector: 'app-qa-review',
@@ -24,6 +25,10 @@ import { TabsModule } from 'primeng/tabs';
   styleUrl: './qa-review.component.scss'
 })
 export class QaReviewComponent {
+
+  getStageDisplay(stage: string): string {
+    return getStageFullDisplay(stage);
+  }
 
   student: any = {
     studentName: '',
@@ -55,7 +60,8 @@ export class QaReviewComponent {
 
   constructor(
     private applicationService: ApplicationFormService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -69,6 +75,20 @@ export class QaReviewComponent {
         if (res && res.application) {
           const app = res.application;
           this.student = app;
+
+          if (app.currentStage === 'NEW_APP') {
+            this.applicationService.updateApplicationStage(this.applicationId, 'QA_REVIEW').subscribe({
+              next: () => {
+                this.student.currentStage = 'QA_REVIEW';
+                this.getData();
+              },
+              error: (err) => {
+                console.error('Error auto-transitioning to QA_REVIEW:', err);
+              }
+            });
+            return;
+          }
+
           const notes = app.notes || [];
 
           this.publicNotes = notes.filter(
@@ -125,7 +145,6 @@ export class QaReviewComponent {
       },
       error: (err) => {
         console.error('Error verifying document:', err);
-        alert('Failed to verify document: ' + err.message);
       }
     });
   }
@@ -134,11 +153,15 @@ export class QaReviewComponent {
     this.applicationService.updateApplicationStage(this.applicationId, 'APP_REJECTED').subscribe({
       next: (res: any) => {
         alert('Application rejected');
-        this.getData();
+        const role = localStorage.getItem('role');
+        if (role === 'AGENT') {
+          this.router.navigate(['/applications']);
+        } else {
+          this.router.navigate(['/internal-dashboard']);
+        }
       },
       error: (err) => {
         console.error('Error rejecting application:', err);
-        alert('Failed to reject: ' + err.message);
       }
     });
   }
@@ -147,11 +170,15 @@ export class QaReviewComponent {
     this.applicationService.updateApplicationStage(this.applicationId, 'APP_REVIEW').subscribe({
       next: (res: any) => {
         alert('Application successfully moved to Application Review');
-        this.getData();
+        const role = localStorage.getItem('role');
+        if (role === 'AGENT') {
+          this.router.navigate(['/applications']);
+        } else {
+          this.router.navigate(['/internal-dashboard']);
+        }
       },
       error: (err) => {
         console.error('Error moving application:', err);
-        alert('Failed to move stage: ' + err.message);
       }
     });
   }

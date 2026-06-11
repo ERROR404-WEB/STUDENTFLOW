@@ -19,7 +19,7 @@
                 <div class="circle">
                     <i class="pi pi-check"></i>
                 </div>
-                <span>NEW_APP</span>
+                <span>New Application</span>
             </div>
 
             <div class="line"></div>
@@ -28,7 +28,7 @@
                 <div class="circle">
                     2
                 </div>
-                <span>QA_REVIEW</span>
+                <span>QA Review</span>
             </div>
 
             <div class="line"></div>
@@ -37,11 +37,19 @@
                 <div class="circle">
                     3
                 </div>
-                <span>APP_REVIEW</span>
+                <span>App Review</span>
             </div>
 
         </div>
 
+    </div>
+
+    <div class="current-status-banner" style="background-color: #e0f2fe; border-left: 4px solid #0284c7; padding: 12px 16px; border-radius: 4px; margin-bottom: 20px; font-family: inherit;">
+        <div style="font-size: 0.75rem; color: #0369a1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Current Stage & Owner</div>
+        <div style="font-size: 1.05rem; color: #0c4a6e; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+            <i class="pi pi-info-circle" style="color: #0284c7;"></i>
+            {{ getStageDisplay(student.currentStage) }}
+        </div>
     </div>
 
     <!-- TOP -->

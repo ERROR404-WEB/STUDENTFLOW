@@ -5,45 +5,77 @@
 
         <div class="form-grid">
             <div class="form-field">
-                <label>Student Name</label>
-                <input pInputText type="text" placeholder="Enter student name" [(ngModel)]="studentName" />
+                <label>First Name</label>
+                <input pInputText type="text" placeholder="Enter first name" [(ngModel)]="firstName"
+                    (blur)="firstNameTouched = true" (input)="firstNameTouched = true"
+                    [class.invalid]="firstNameTouched && !firstName.trim()" />
+                <small class="error-msg" *ngIf="firstNameTouched && !firstName.trim()">First Name is required.</small>
+            </div>
+
+            <div class="form-field">
+                <label>Last Name</label>
+                <input pInputText type="text" placeholder="Enter last name" [(ngModel)]="lastName"
+                    (blur)="lastNameTouched = true" (input)="lastNameTouched = true"
+                    [class.invalid]="lastNameTouched && !lastName.trim()" />
+                <small class="error-msg" *ngIf="lastNameTouched && !lastName.trim()">Last Name is required.</small>
             </div>
 
             <div class="form-field">
                 <label>Student Email</label>
-                <input pInputText type="email" placeholder="Enter student email" [(ngModel)]="studentEmail" />
+                <input pInputText type="email" placeholder="Enter student email" [(ngModel)]="studentEmail"
+                    (blur)="emailTouched = true" (input)="emailTouched = true"
+                    [class.invalid]="emailTouched && (!studentEmail.trim() || !isValidEmail(studentEmail))" />
+                <small class="error-msg" *ngIf="emailTouched && !studentEmail.trim()">Email is required.</small>
+                <small class="error-msg" *ngIf="emailTouched && studentEmail.trim() && !isValidEmail(studentEmail)">Please enter a valid email address.</small>
             </div>
 
             <div class="form-field">
                 <label>Phone Number</label>
-                <input pInputText type="text" placeholder="Enter phone number" [(ngModel)]="phoneNumber" />
+                <input pInputText type="text" placeholder="Enter phone number" [(ngModel)]="phoneNumber"
+                    (blur)="phoneTouched = true" (input)="phoneTouched = true"
+                    [class.invalid]="phoneTouched && !phoneNumber.trim()" />
+                <small class="error-msg" *ngIf="phoneTouched && !phoneNumber.trim()">Phone Number is required.</small>
             </div>
 
             <div class="form-field">
-                <label>Nationality</label>
-                <input pInputText type="text" placeholder="Enter nationality" [(ngModel)]="nationality" />
+                <label>Country</label>
+                <input pInputText type="text" placeholder="Enter country" [(ngModel)]="nationality"
+                    (blur)="countryTouched = true" (input)="countryTouched = true"
+                    [class.invalid]="countryTouched && !nationality.trim()" />
+                <small class="error-msg" *ngIf="countryTouched && !nationality.trim()">Country is required.</small>
             </div>
 
             <div class="form-field">
                 <label>Course Name</label>
-                <input pInputText type="text" placeholder="Enter course name" [(ngModel)]="courseName" />
+                <input pInputText type="text" placeholder="Enter course name" [(ngModel)]="courseName"
+                    (blur)="courseTouched = true" (input)="courseTouched = true"
+                    [class.invalid]="courseTouched && !courseName.trim()" />
+                <small class="error-msg" *ngIf="courseTouched && !courseName.trim()">Course is required.</small>
             </div>
 
             <div class="form-field">
                 <label>University Name</label>
-                <input pInputText type="text" placeholder="Enter university name" [(ngModel)]="universityName" />
+                <input pInputText type="text" placeholder="Enter university name" [(ngModel)]="universityName"
+                    (blur)="universityTouched = true" (input)="universityTouched = true"
+                    [class.invalid]="universityTouched && !universityName.trim()" />
+                <small class="error-msg" *ngIf="universityTouched && !universityName.trim()">University is required.</small>
             </div>
 
             <div class="form-field">
                 <label>Intake Month</label>
                 <p-select [options]="intakeMonths" [(ngModel)]="intakeMonth" optionLabel="label" optionValue="value"
-                    appendTo="body" styleClass="full-select">
+                    appendTo="body" styleClass="full-select" (onChange)="intakeMonthTouched = true"
+                    [class.invalid]="intakeMonthTouched && !intakeMonth">
                 </p-select>
+                <small class="error-msg" *ngIf="intakeMonthTouched && !intakeMonth">Intake Month is required.</small>
             </div>
 
             <div class="form-field">
                 <label>Intake Year</label>
-                <input pInputText type="number" [(ngModel)]="intakeYear" />
+                <input pInputText type="number" [(ngModel)]="intakeYear"
+                    (blur)="intakeYearTouched = true" (input)="intakeYearTouched = true"
+                    [class.invalid]="intakeYearTouched && !intakeYear" />
+                <small class="error-msg" *ngIf="intakeYearTouched && !intakeYear">Intake Year is required.</small>
             </div>
         </div>
 
@@ -51,27 +83,30 @@
             <h3>Required Documents</h3>
 
             <div class="upload-grid">
-                <div class="upload-box" *ngFor="let doc of requiredDocs">
+                <div class="upload-box" *ngFor="let doc of requiredDocs" [class.invalid]="formTouched && getUploadedDocsCount() === 0">
                     <label>{{ doc.name }}</label>
 
                     <p-fileUpload mode="basic" chooseLabel="Upload PDF" accept="application/pdf" [maxFileSize]="5000000"
                         [auto]="false" (onSelect)="onFileSelect($event, doc.key)">
                     </p-fileUpload>
 
-                    <small *ngIf="uploadedDocs[doc.key]">
+                    <small *ngIf="uploadedDocs[doc.key]" style="color: #16a34a;">
                         Selected: {{ uploadedDocs[doc.key].name }}
                     </small>
                 </div>
             </div>
+            <small class="error-msg text-center" style="display: block; margin-top: 14px;" *ngIf="formTouched && getUploadedDocsCount() === 0">
+                Please upload at least one document before submitting.
+            </small>
         </div>
 
         <div class="form-field">
-            <label>Agent Note</label>
-            <textarea pInputTextarea rows="4" placeholder="Add any note for internal team" [(ngModel)]="agentNote">
-      </textarea>
+            <label>Notes</label>
+            <textarea pInputTextarea rows="4" placeholder="Add any note for internal team" [(ngModel)]="agentNote"></textarea>
         </div>
 
-        <p-button label="Submit Application" icon="pi pi-send" styleClass="submit-btn" (onClick)="submitApplication()">
+        <p-button label="Submit Application" icon="pi pi-send" styleClass="submit-btn" 
+            [disabled]="isFormInvalid" (onClick)="submitApplication()">
         </p-button>
     </div>
 </div>

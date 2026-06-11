@@ -116,3 +116,21 @@ input {
         grid-template-columns: 1fr;
     }
 }
+
+input.invalid,
+textarea.invalid,
+:host ::ng-deep .full-select.invalid {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 1px #ef4444 !important;
+}
+
+.upload-box.invalid {
+    border: 1px dashed #ef4444 !important;
+    background-color: #fef2f2;
+}
+
+.error-msg {
+    color: #ef4444;
+    font-size: 13px;
+    margin-top: 4px;
+}

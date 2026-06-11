@@ -5,7 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
 import { ApplicationFormService } from '../application-form/application-form.service';
+import { getStageFullDisplay } from '../../core/utils/stage.utils';
 
 @Component({
   selector: 'app-agent-application-status',
@@ -14,12 +17,25 @@ import { ApplicationFormService } from '../application-form/application-form.ser
     CommonModule,
     FormsModule,
     ButtonModule,
-    TextareaModule
+    TextareaModule,
+    InputTextModule,
+    SelectModule
   ],
   templateUrl: './agent-application-status.component.html',
   styleUrl: './agent-application-status.component.scss'
 })
 export class AgentApplicationStatusComponent {
+  isEditing = false;
+  editForm: any = {};
+  intakeMonths = [
+    { label: 'January', value: 'January' },
+    { label: 'May', value: 'May' },
+    { label: 'September', value: 'September' }
+  ];
+
+  getStageDisplay(stage: string): string {
+    return getStageFullDisplay(stage);
+  }
 
   constructor(
     private router: Router,
@@ -31,13 +47,36 @@ export class AgentApplicationStatusComponent {
 
   student: any = {};
 
-  statuses = [
-    'Submitted',
-    'Processing',
-    'Decision',
-    'Deposit',
-    'Enrolled'
-  ];
+  get role(): string {
+    return localStorage.getItem('role') || '';
+  }
+
+  get isAdmin(): boolean {
+    return this.role === 'ADMIN';
+  }
+
+  get statuses(): string[] {
+    if (this.isAdmin) {
+      return [
+        'Submitted',
+        'QA Review',
+        'App Review',
+        'Decision',
+        'Deposit',
+        'CAS Review',
+        'Enrolment',
+        'Completed'
+      ];
+    } else {
+      return [
+        'Submitted',
+        'Processing',
+        'Decision',
+        'Deposit',
+        'Enrolled'
+      ];
+    }
+  }
 
   get currentIndex(): number {
     const stageVal = this.student?.currentStage || this.student?.stage;
@@ -47,25 +86,51 @@ export class AgentApplicationStatusComponent {
 
     const stage = stageVal.toUpperCase();
 
-    switch (stage) {
-      case 'NEW_APP':
-        return 0; // Submitted
-      case 'QA_REVIEW':
-      case 'APP_REVIEW':
-        return 1; // Processing
-      case 'DECISION':
-        return 2; // Decision
-      case 'DEPOSIT':
-      case 'CAS_REVIEW':
-        return 3; // Deposit
-      case 'ENROLMENT':
-      case 'COMPLETED':
-        return 4; // Enrolled
-      case 'APP_REJECTED':
-      case 'CLOSED_LOST':
-        return 2; // Decision
-      default:
-        return 0;
+    if (this.isAdmin) {
+      switch (stage) {
+        case 'NEW_APP':
+          return 0;
+        case 'QA_REVIEW':
+          return 1;
+        case 'APP_REVIEW':
+          return 2;
+        case 'DECISION':
+          return 3;
+        case 'DEPOSIT':
+          return 4;
+        case 'CAS_REVIEW':
+          return 5;
+        case 'ENROLMENT':
+          return 6;
+        case 'COMPLETED':
+          return 7;
+        case 'APP_REJECTED':
+        case 'CLOSED_LOST':
+          return 3; // Highlight up to Decision
+        default:
+          return 0;
+      }
+    } else {
+      switch (stage) {
+        case 'NEW_APP':
+          return 0; // Submitted
+        case 'QA_REVIEW':
+        case 'APP_REVIEW':
+          return 1; // Processing
+        case 'DECISION':
+          return 2; // Decision
+        case 'DEPOSIT':
+        case 'CAS_REVIEW':
+          return 3; // Deposit
+        case 'ENROLMENT':
+        case 'COMPLETED':
+          return 4; // Enrolled
+        case 'APP_REJECTED':
+        case 'CLOSED_LOST':
+          return 2; // Decision
+        default:
+          return 0;
+      }
     }
   }
 
@@ -108,20 +173,95 @@ export class AgentApplicationStatusComponent {
     });
   }
 
-  editApplication() {
-    this.router.navigate(['/applications/edit/1']);
+  startEdit() {
+    this.editForm = {
+      studentName: this.student.studentName,
+      studentEmail: this.student.studentEmail,
+      phoneNumber: this.student.phoneNumber,
+      nationality: this.student.nationality,
+      courseName: this.student.courseName,
+      universityName: this.student.universityName,
+      intakeMonth: this.student.intakeMonth,
+      intakeYear: this.student.intakeYear
+    };
+    this.isEditing = true;
+  }
+
+  cancelEdit() {
+    this.isEditing = false;
+  }
+
+  saveApplication() {
+    if (
+      !this.editForm.studentName?.trim() ||
+      !this.editForm.studentEmail?.trim() ||
+      !this.editForm.phoneNumber?.trim() ||
+      !this.editForm.nationality?.trim() ||
+      !this.editForm.courseName?.trim() ||
+      !this.editForm.universityName?.trim() ||
+      !this.editForm.intakeMonth ||
+      !this.editForm.intakeYear
+    ) {
+      alert('All fields are required.');
+      return;
+    }
+
+    this.applicationService.updateApplication(this.applicationId, this.editForm).subscribe({
+      next: (res: any) => {
+        this.isEditing = false;
+        this.getAgentApplicationStatus();
+      },
+      error: (err) => {
+        console.error('Error saving application:', err);
+        alert('Failed to save changes: ' + err.message);
+      }
+    });
   }
 
   viewDocument(doc: any) {
-    console.log('View', doc);
+    if (doc.uploaded && doc.fileUrl) {
+      window.open(doc.fileUrl, '_blank');
+    } else if (doc.uploaded) {
+      window.open('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', '_blank');
+    } else {
+      alert(`Document "${doc.name}" is missing.`);
+    }
   }
 
   replaceDocument(doc: any) {
-    console.log('Replace', doc);
+    const fileName = prompt(`Enter file name for ${doc.name}:`, doc.fileName || `${doc.key}.pdf`);
+    if (!fileName || !fileName.trim()) return;
+
+    const updatedDocs = this.documents.map((d: any) => {
+      if (d.key === doc.key) {
+        return {
+          ...d,
+          fileName: fileName.trim(),
+          uploaded: true,
+          uploadedAt: new Date()
+        };
+      }
+      return d;
+    });
+
+    this.applicationService.updateApplication(this.applicationId, { documents: updatedDocs }).subscribe({
+      next: (res: any) => {
+        this.getAgentApplicationStatus();
+      },
+      error: (err) => {
+        console.error('Error replacing document:', err);
+        alert('Failed to update document: ' + err.message);
+      }
+    });
   }
 
   uploadDocument() {
-    console.log('Upload document');
+    const firstMissing = this.documents.find(d => !d.uploaded);
+    if (firstMissing) {
+      this.replaceDocument(firstMissing);
+    } else {
+      alert('All required documents have already been uploaded.');
+    }
   }
 
   getAgentApplicationStatus() {

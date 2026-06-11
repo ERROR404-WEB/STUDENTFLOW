@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
 import { TabsModule } from 'primeng/tabs';
 import { ApplicationFormService } from '../application-form/application-form.service';
+import { getStageFullDisplay } from '../../core/utils/stage.utils';
 
 @Component({
   selector: 'app-visa-review',
@@ -22,6 +23,10 @@ import { ApplicationFormService } from '../application-form/application-form.ser
   styleUrl: './visa-review.component.scss'
 })
 export class VisaReviewComponent implements OnInit {
+
+  getStageDisplay(stage: string): string {
+    return getStageFullDisplay(stage);
+  }
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -115,13 +120,17 @@ export class VisaReviewComponent implements OnInit {
   }
 
   approveVisaStage() {
-    this.applicationService.updateApplicationStage(this.applicationId, 'ENROLMENT').subscribe({
+    const currentStage = this.student?.currentStage || 'DEPOSIT';
+    const nextStage = currentStage === 'DEPOSIT' ? 'CAS_REVIEW' : 'ENROLMENT';
+
+    this.applicationService.updateApplicationStage(this.applicationId, nextStage).subscribe({
       next: (res: any) => {
-        alert('Visa stage approved, application moved to Enrolment stage');
+        const stageMsg = nextStage === 'CAS_REVIEW' ? 'moved to CAS Review stage' : 'moved to Enrolment stage';
+        alert(`Visa stage approved, application successfully ${stageMsg}`);
         this.router.navigate(['/internal-dashboard']);
       },
       error: (err) => {
-        console.error('Error transitioning to ENROLMENT stage:', err);
+        console.error(`Error transitioning to ${nextStage} stage:`, err);
         alert('Failed to update stage: ' + err.message);
       }
     });

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ApplicationFormService } from '../application-form/application-form.service';
+import { getStageFullDisplay } from '../../core/utils/stage.utils';
 
 @Component({
   selector: 'app-internal-dashboard',
@@ -24,6 +25,10 @@ export class InternalDashboardComponent implements OnInit {
   currentRole = 'QA_OFFICER';
   searchText = '';
   applications: any[] = [];
+
+  getStageDisplay(stage: string): string {
+    return getStageFullDisplay(stage);
+  }
 
   stats = {
     pending: 0,

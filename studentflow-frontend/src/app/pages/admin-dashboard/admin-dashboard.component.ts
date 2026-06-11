@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { environment } from '../../../../environments';
+import { getStageFullDisplay } from '../../core/utils/stage.utils';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -32,7 +33,10 @@ export class AdminDashboardComponent implements OnInit {
     this.http.get<any>(`${this.url}/api/applications/stats/dashboard`).subscribe({
       next: (res) => {
         this.stats = res.stats;
-        this.stages = res.stages;
+        this.stages = (res.stages || []).map((s: any) => ({
+          ...s,
+          displayName: getStageFullDisplay(s.stage)
+        }));
         this.recentActivities = res.recentActivities;
       },
       error: (err) => {

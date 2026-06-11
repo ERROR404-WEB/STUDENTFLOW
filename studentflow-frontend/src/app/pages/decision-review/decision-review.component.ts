@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
 import { TabsModule } from 'primeng/tabs';
 import { ApplicationFormService } from '../application-form/application-form.service';
+import { getStageFullDisplay } from '../../core/utils/stage.utils';
 
 @Component({
   selector: 'app-decision-review',
@@ -22,6 +23,10 @@ import { ApplicationFormService } from '../application-form/application-form.ser
   styleUrl: './decision-review.component.scss'
 })
 export class DecisionReviewComponent implements OnInit {
+
+  getStageDisplay(stage: string): string {
+    return getStageFullDisplay(stage);
+  }
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);

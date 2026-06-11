@@ -10,37 +10,52 @@
 
             <div class="detail">
                 <label>Name</label>
-                <span>{{student.studentName}}</span>
+                <span *ngIf="!isEditing">{{student.studentName}}</span>
+                <input *ngIf="isEditing" pInputText type="text" [(ngModel)]="editForm.studentName" style="width: 100%; height: 36px;" />
             </div>
 
             <div class="detail">
                 <label>Email</label>
-                <span>{{student.studentEmail}}</span>
+                <span *ngIf="!isEditing">{{student.studentEmail}}</span>
+                <input *ngIf="isEditing" pInputText type="email" [(ngModel)]="editForm.studentEmail" style="width: 100%; height: 36px;" />
             </div>
 
             <div class="detail">
                 <label>Phone</label>
-                <span>{{student.phoneNumber}}</span>
+                <span *ngIf="!isEditing">{{student.phoneNumber}}</span>
+                <input *ngIf="isEditing" pInputText type="text" [(ngModel)]="editForm.phoneNumber" style="width: 100%; height: 36px;" />
             </div>
 
             <div class="detail">
                 <label>Nationality</label>
-                <span>{{student.nationality}}</span>
+                <span *ngIf="!isEditing">{{student.nationality}}</span>
+                <input *ngIf="isEditing" pInputText type="text" [(ngModel)]="editForm.nationality" style="width: 100%; height: 36px;" />
             </div>
 
             <div class="detail">
                 <label>Course</label>
-                <span>{{student.courseName}}</span>
+                <span *ngIf="!isEditing">{{student.courseName}}</span>
+                <input *ngIf="isEditing" pInputText type="text" [(ngModel)]="editForm.courseName" style="width: 100%; height: 36px;" />
             </div>
 
             <div class="detail">
                 <label>University</label>
-                <span>{{student.universityName}}</span>
+                <span *ngIf="!isEditing">{{student.universityName}}</span>
+                <input *ngIf="isEditing" pInputText type="text" [(ngModel)]="editForm.universityName" style="width: 100%; height: 36px;" />
             </div>
 
             <div class="detail">
-                <label>Intake</label>
-                <span>{{student.intakeMonth}} {{student.intakeYear}}</span>
+                <label>Intake Month</label>
+                <span *ngIf="!isEditing">{{student.intakeMonth}}</span>
+                <p-select *ngIf="isEditing" [options]="intakeMonths" [(ngModel)]="editForm.intakeMonth" 
+                    optionLabel="label" optionValue="value" appendTo="body" styleClass="full-select" [style]="{ width: '100%', height: '36px', display: 'block' }">
+                </p-select>
+            </div>
+
+            <div class="detail">
+                <label>Intake Year</label>
+                <span *ngIf="!isEditing">{{student.intakeYear}}</span>
+                <input *ngIf="isEditing" pInputText type="number" [(ngModel)]="editForm.intakeYear" style="width: 100%; height: 36px;" />
             </div>
 
             <hr>
@@ -89,7 +104,12 @@
 
             </div>
 
-            <button pButton label="Edit Application" icon="pi pi-pencil" class="edit-btn" (click)="editApplication()">
+            <div class="edit-actions" *ngIf="isEditing" style="display: flex; gap: 8px; margin-top: 16px;">
+                <button pButton label="Save" icon="pi pi-check" style="flex: 1;" (click)="saveApplication()"></button>
+                <button pButton label="Cancel" icon="pi pi-times" severity="secondary" (click)="cancelEdit()"></button>
+            </div>
+
+            <button *ngIf="!isEditing" pButton label="Edit Application" icon="pi pi-pencil" class="edit-btn" style="margin-top: 16px;" (click)="startEdit()">
             </button>
 
         </div>
@@ -103,6 +123,14 @@
         <div class="card">
 
             <h2>Application Status</h2>
+
+            <div *ngIf="isAdmin" class="current-status-banner" style="background-color: #e0f2fe; border-left: 4px solid #0284c7; padding: 12px 16px; border-radius: 4px; margin-bottom: 20px; font-family: inherit;">
+                <div style="font-size: 0.75rem; color: #0369a1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">Current Stage & Owner</div>
+                <div style="font-size: 1.05rem; color: #0c4a6e; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                    <i class="pi pi-info-circle" style="color: #0284c7;"></i>
+                    {{ getStageDisplay(student.currentStage) }}
+                </div>
+            </div>
 
             <div class="progress-container">
 
