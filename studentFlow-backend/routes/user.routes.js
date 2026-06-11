@@ -41,7 +41,7 @@ router.post("/", authMiddleware, async (req, res) => {
       return res.status(403).json({ message: "Only admin can create users" });
     }
 
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role } = req.body || {};
 
     if (!name || !email || !password || !role) {
       return res.status(400).json({ message: "Name, email, password, and role are required" });
@@ -100,7 +100,7 @@ router.patch("/:id", authMiddleware, async (req, res) => {
     if (req.user.role !== "ADMIN") {
       return res.status(403).json({ message: "Forbidden: Admin access required" });
     }
-    const { name, email, role } = req.body;
+    const { name, email, role } = req.body || {};
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -153,7 +153,7 @@ router.patch("/:id/status", authMiddleware, async (req, res) => {
     if (req.user.role !== "ADMIN") {
       return res.status(403).json({ message: "Forbidden: Admin access required" });
     }
-    const { isActive } = req.body;
+    const { isActive } = req.body || {};
     if (isActive === undefined) {
       return res.status(400).json({ message: "isActive state is required" });
     }

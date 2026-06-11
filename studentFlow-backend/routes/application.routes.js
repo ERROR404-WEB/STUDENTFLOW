@@ -233,7 +233,7 @@ router.get("/:id", authMiddleware, async (req, res) => {
 router.patch("/:id/stage", authMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
-        const { stage } = req.body;
+        const { stage } = req.body || {};
 
         if (!stage) {
             return res.status(400).json({ message: "Stage is required" });
@@ -307,7 +307,7 @@ router.patch("/:id/stage", authMiddleware, async (req, res) => {
 router.post("/:id/notes", authMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
-        const { text, visibility, addedByName, role } = req.body;
+        const { text, visibility, addedByName, role } = req.body || {};
 
         if (!text) {
             return res.status(400).json({ message: "Note text is required" });
@@ -347,7 +347,7 @@ router.post("/:id/notes", authMiddleware, async (req, res) => {
 router.patch("/:id/documents/:docKey/verify", authMiddleware, async (req, res) => {
     try {
         const { id, docKey } = req.params;
-        const { verified } = req.body;
+        const { verified } = req.body || {};
 
         if (verified === undefined) {
             return res.status(400).json({ message: "Verified state (true/false) is required" });
@@ -386,7 +386,7 @@ router.patch("/:id/documents/:docKey/verify", authMiddleware, async (req, res) =
 router.patch("/:id", authMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
-        const updates = req.body;
+        const updates = req.body || {};
 
         // Block direct modification of currentStage to protect the workflow state machine
         if (updates && updates.currentStage) {
